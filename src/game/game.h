@@ -3,6 +3,7 @@
 #include "videodriver.h"
 #include "scene.h"
 #include "chunk.h"
+#include "field.h"
 
 // struct Field {
 // 	std::array< std::array<Block,32>, 32> blocks;
@@ -17,6 +18,8 @@ public:
 	void init();
 
 private:
+	Field *field;
+
 	SolisDevice *device;
 	VideoDriver *driver;
 	Scene *scene;

@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include "debug/logger.h"
 #include "player.h"
-#include "field.h"
 
 VertexBuffer *generateField(uint32_t size) {
 	std::vector<Vertex> vertices;
@@ -18,7 +17,7 @@ VertexBuffer *generateField(uint32_t size) {
 
 	for(size_t i = 0; i < size + 1; i++) {
 		for(size_t k = 0; k < size + 1; k++) {
-			position = {i, 0, k};
+			position = {-1.0*i, 0, k};
 
 			uvCoord = {(float) (i % size) , (float) (k % size)};
 			normal = {0, 1, 0};
@@ -27,13 +26,13 @@ VertexBuffer *generateField(uint32_t size) {
 	}
 
 	for(size_t i = 0; i < size * size; i++) {
+		indices.push_back((i + i / size) + (size + 1));
+		indices.push_back((i + i / size) + 1);
 		indices.push_back((i + i / size));
-		indices.push_back((i + i / size) + 1);
-		indices.push_back((i + i / size) + (size + 1));
 
-		indices.push_back((i + i / size) + 1);
-		indices.push_back((i + i / size) + (size + 2));
 		indices.push_back((i + i / size) + (size + 1));
+		indices.push_back((i + i / size) + (size + 2));
+		indices.push_back((i + i / size) + 1);
 	}
 
 	return new VertexBuffer(vertices, indices);
@@ -44,6 +43,11 @@ Game::Game() {
 }
 
 Game::~Game() {
+	if(field) {
+		delete field;
+	}
+
+
 	if(device) {
 		delete device;
 	}
@@ -67,20 +71,19 @@ void Game::init() {
 	//	//set the blocks to the building
 	//}
 
-	Field field;
-	field.blocks.at(0).at(0) = Block(std::make_shared<BlockData>(Tree()));
-	field.blocks.at(5).at(5) = field.blocks.at(0).at(0);
-
+	field = new Field();
+	field->blocks.at(1).at(1) = Block(std::make_shared<BlockData>(Tree()));
+	field->blocks.at(5).at(5) = field->blocks.at(1).at(1);
 
 
 	device = new SolisDevice(VideoDriverType::eOpenGL, 1280, 720);
 	driver = device->getVideoDriver();
 	scene = device->getScene();
 
-	for(int32_t y = 0; y < field.blocks.size(); y++) {
-		for(int32_t x = 0; x < field.blocks.at(0).size(); x++) {
-			if(field.blocks.at(y).at(x).getType() == BlockType::eTree) {
-				scene->addToScene((new Node(Transform(glm::vec3(-x,0,y))))
+	for(int32_t y = 0; y < field->blocks.size(); y++) {
+		for(int32_t x = 0; x < field->blocks.at(0).size(); x++) {
+			if(field->blocks.at(y).at(x).getType() == BlockType::eTree) {
+				scene->addToScene((new Node(Transform(glm::vec3(x,0,y))))
 					->addComponent(new RenderComponent(
 						scene->getMesh("tree.obj"),
 						new Material(driver->getTexture("solis.png")))));
@@ -88,16 +91,18 @@ void Game::init() {
 		}	
 	}
 
-	scene->addToScene((new Node(Transform(glm::vec3(0.5,0,-1))))
+	scene->addToScene((new Node(Transform(glm::vec3(-0.5,0,-0.5))))
 		->addComponent(new RenderComponent(
 			scene->getMesh(generateField(32)),
 			new Material(driver->getTexture("solis.png")))));
 
-	scene->addToScene((new Node(Transform(glm::vec3(1,0,0.5), glm::quat(0,0,0,1), glm::vec3(0.5,0.5,0.5))))
-		->addComponent(new Player(&field))
+	Player *player = new Player(field);
+	scene->addToScene((new Node(Transform(glm::vec3(0,0,0), glm::quat(0,0,0,1), glm::vec3(0.5,0.5,0.5))))
+		->addComponent(player)
 		->addComponent(new RenderComponent(
 			scene->getMesh("Person.obj"),
 			new Material(driver->getTexture("solis.png")))));
+	player->init();
 
 	driver->addShaderFromFile("texture");
 
@@ -114,6 +119,7 @@ void Game::init() {
 #include <thread>
 
 void Game::run() {
+	printf("hi\n");
 	// Logger::start();
 	// Logger::write(LogType::eWarning, "hi", true);
 	// Logger::write(LogType::eWarning, "hi", false);
@@ -144,6 +150,7 @@ void Game::run() {
 
 		driver->clearScreenBuffer();
 		scene->input(diff.count() * 10);
+		scene->updateScene(diff.count() * 10);
 
 		scene->renderScene();
 

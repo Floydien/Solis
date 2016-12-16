@@ -5,6 +5,9 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 
+/** 
+ *	Class to represent the transformation of an object in 3D-space
+ */
 class Transform {
 public:
 	Transform(const glm::vec3& position = glm::vec3(0,0,0),
@@ -16,7 +19,7 @@ public:
 				parentMatrix(glm::mat4(1)),
 				parent(0)
 				{};
-	virtual ~Transform() {};
+	~Transform() {};
 
 	void rotate(const glm::quat& rotation);
 	void rotate(const glm::vec3& axis, float angle);
@@ -39,11 +42,11 @@ public:
 	glm::vec3 getUp()						const;
 
 
-	inline void setPosition(const glm::vec3& position) { this->position = position; }
-	inline void setRotation(const glm::quat& rotation) { this->rotation = rotation; }
-	inline void setScale(const glm::vec3& scale) { this->scale = scale; }
-	inline void setScale(float scale) { this->scale = glm::vec3(scale); }
-	inline void setParent(Transform* parent) { this->parent = parent; }
+	inline void setPosition(const glm::vec3& position) 	{ this->position = position; }
+	inline void setRotation(const glm::quat& rotation) 	{ this->rotation = rotation; }
+	inline void setScale(const glm::vec3& scale) 		{ this->scale = scale; }
+	inline void setScale(float scale) 					{ this->scale = glm::vec3(scale); }
+	inline void setParent(Transform* parent) 			{ this->parent = parent; }
 
 private:
 	const glm::mat4& getParentMatrix() const;
