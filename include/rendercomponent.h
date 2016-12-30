@@ -4,8 +4,6 @@
 #include "material.h"
 #include "mesh.h"
 #include "scene.h"
-// #include "shader.h"
-// #include "camera.h"
 
 class RenderComponent : public NodeComponent {
 public:
@@ -13,17 +11,11 @@ public:
 		mesh(mesh),
 		material(material) {};
 
-	virtual ~RenderComponent() {};
+	virtual ~RenderComponent();
 
 	virtual void input(float, SolisDevice *) {};
 	virtual void update(float) {};
-	virtual void render(const VideoDriver *driver) const {
-		// shader.updateUniforms(getTransform(), material, camera);
-		// material.bind();
-		driver->getActiveShader()->updateUniformMatrix4fv("transform.model", getTransform().getTransformation());
-		driver->bindTexture(material->getTexture());
-		driver->drawVertexBuffer(mesh->getVertexBuffer());
-	}
+	virtual void render(const VideoDriver *driver) const;
 
 protected:
 	Mesh *mesh;

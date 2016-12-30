@@ -91,6 +91,8 @@ void OpenGLDriver::deleteBuffer(OpenGLDriver::VBLink *bufferLink) {
     	glDeleteBuffers(1, &static_cast<VBLinkGL *>(it->second)->vbo);
     	glDeleteBuffers(1, &static_cast<VBLinkGL *>(it->second)->ibo);
 
+        delete it->first;
+        delete it->second;
     	vertexBufferMap.erase(it);
 	}
 }

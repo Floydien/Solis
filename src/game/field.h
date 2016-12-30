@@ -3,16 +3,21 @@
 #include "nodecomponent.h"
 #include "block.h"
 
+static const size_t BLOCK_SIZE = 32;
+
 class Field : public NodeComponent {
 public:
-	Field() {};
+	Field();
+	~Field();
 
-	Node *setBlock(BlockType type, size_t x, size_t y);
+
+	Node *setBlock(BlockType, size_t, size_t);
+	void removeBlock(size_t, size_t);
 
 	virtual void input(float, SolisDevice *) {};
 	virtual void update(float) {};
 	virtual void render(const VideoDriver *) const {};
 	
-	std::array<std::array<Block, 32>, 32> blocks;
+	std::array<std::array<Block *, BLOCK_SIZE>, BLOCK_SIZE> blocks;
 private:
 };

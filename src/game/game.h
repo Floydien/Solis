@@ -1,8 +1,7 @@
 #pragma once
 #include "solisdevice.h"
 #include "videodriver.h"
-#include "scene.h"
-#include "chunk.h"
+#include "rendercomponent.h"
 #include "field.h"
 
 class Game {

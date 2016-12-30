@@ -1,7 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "texture.h"
-// #include "shader.h"
 #include <string>
 #include <map>
 

@@ -4,7 +4,7 @@ CFLAGS = -m64 -c -Wall -Wextra -I/mingw64/include -Iinclude -std=c++14
 ifeq ($(OS),Windows_NT)
 	LDFLAGS = -L/mingw64/lib -lopengl32 -lglew32 -lglfw3 -lassimp -lvulkan-1
 else
-	LDFLAGS = -lGL -lGLEW -lglfw -lassimp -lvulkan -lSOIL
+	LDFLAGS = -lGL -lGLEW -lglfw -lassimp -lSOIL
 endif
 SOURCES := $(wildcard  src/*.cpp src/game/*.cpp src/core/*.cpp src/light/*.cpp src/render/*.cpp src/render/opengl/*.cpp )
 EXECUTABLE=hello.exe

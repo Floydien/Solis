@@ -52,7 +52,8 @@ Mesh *Scene::getMesh(VertexBuffer *buffer) {
 
 void Scene::addCamera(const glm::vec3 &pos) {
 	//TODO: implement multiple cameras
-	if(activeCamera) {
+
+	if(activeCamera != nullptr) {
 		delete activeCamera;
 	}
 	activeCamera = new Camera(45.0f, (float)device->getWidth()/(float)device->getHeight(), 0.1f, 1000.0f, pos);

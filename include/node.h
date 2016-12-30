@@ -12,8 +12,9 @@ class Scene;
 
 class Node {
 public:
-	Node(const Transform &transform = Transform()) :
-		transform(transform) {};
+	Node(const Transform &transform = Transform(), const std::string &name = "") :
+		transform(transform),
+		name(name) {};
 	~Node();
 
 	Node *addChild(Node *);
@@ -24,9 +25,10 @@ public:
 	void render(const VideoDriver *) const;
 
 	void setScene(Scene *);
-	inline Scene *getScene() { return scene; };
+	inline Scene *getScene() 			{ return scene; };
+	inline Transform *getTransform() 	{ return &transform; }
+	inline const std::string &getName() { return name; }
 
-	inline Transform *getTransform() { return &transform; }
 private:
 	Scene *scene;
 
@@ -34,4 +36,5 @@ private:
 	std::vector<NodeComponent *> components;
 
 	Transform transform;
+	const std::string name;
 };

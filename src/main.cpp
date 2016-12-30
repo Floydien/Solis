@@ -2,8 +2,10 @@
 #include "game/game.h"
 
 int main() {
-
-	Game g;
-	g.init();
-	g.run();
+	{
+		Game g;
+		g.init();
+		g.run();
+	}
+	printf("hey\n");
 }

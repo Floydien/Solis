@@ -4,13 +4,15 @@
 
 Node::~Node() {
 	for (size_t i = 0; i < components.size(); i++) {
-		if(components[i])
+		if(components[i]) {
 			delete components[i];
+		}
 	}
 
 	for (size_t i = 0; i < children.size(); i++) {
-		if(children[i])
+		if(children[i]) {
 			delete children[i];
+		}
 	}	
 }
 

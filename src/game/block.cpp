@@ -2,7 +2,6 @@
 
 const std::shared_ptr<EmptyBlock> Block::EMPTY_BLOCK = std::make_shared<EmptyBlock>(EmptyBlock());
 
-
 void Block::setContent(BlockType type) {
 	switch (type) {
 		case BlockType::eEmpty : 

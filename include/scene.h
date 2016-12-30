@@ -1,6 +1,4 @@
 #pragma once
-// #include "window.h"
-// #include "shader.h"
 #include "camera.h"
 #include "solisdevice.h"
 #include "videodriver.h"
@@ -11,7 +9,11 @@
 
 class Scene {
 public:
-	Scene(SolisDevice *device) : device(device), driver(device->getVideoDriver()) {};
+	Scene(SolisDevice *device) : 
+		device(device), 
+		driver(device->getVideoDriver()),
+		root(Transform(), "SceneRootNode"),
+		activeCamera(nullptr) {};
 	~Scene();
 
 	// void loadScene(const std::string &);
