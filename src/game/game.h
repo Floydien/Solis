@@ -5,10 +5,6 @@
 #include "chunk.h"
 #include "field.h"
 
-// struct Field {
-// 	std::array< std::array<Block,32>, 32> blocks;
-// };
-
 class Game {
 public:
 	Game();
