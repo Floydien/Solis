@@ -13,6 +13,9 @@ void Scene::addToScene(Node *node) {
 	node->setScene(this);
 }
 
+void Scene::init() {
+	root.init();
+}
 
 void Scene::input(float delta) {
 	if(activeCamera) {

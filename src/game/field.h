@@ -14,6 +14,7 @@ public:
 	Node *setBlock(BlockType, size_t, size_t);
 	void removeBlock(size_t, size_t);
 
+	virtual void init();
 	virtual void input(float, SolisDevice *) {};
 	virtual void update(float) {};
 	virtual void render(const VideoDriver *) const {};

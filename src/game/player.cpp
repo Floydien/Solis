@@ -51,7 +51,6 @@ void Player::update(float) {
 			return;
 		}
 		if(field->blocks.at((int)pos.x).at((int)pos.z)->getType() != BlockType::eEmpty) {
-			// printf("%d\n", (int)field->blocks.at((int)pos.x).at((int)pos.z).getType());
 			getTransform()->setPosition(prevPosition);
 		} else {
 			prevPosition = *getTransform()->getPosition();

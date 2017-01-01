@@ -1,5 +1,4 @@
 #pragma once
-#include <vulkan/vulkan.hpp>
 #include <stdexcept>
 #include "videodriver.h"
 #include "input.h"

@@ -28,6 +28,14 @@ Node *Node::addComponent(NodeComponent *component) {
 	return this;
 }
 
+void Node::init() {
+	for (size_t i = 0; i < components.size(); i++) {
+		components[i]->init();
+	}
+	for (size_t i = 0; i < children.size(); i++) {
+		children[i]->init();
+	}
+}
 void Node::input(float delta, SolisDevice *device) {
 	for (size_t i = 0; i < components.size(); i++) {
 		components[i]->input(delta, device);

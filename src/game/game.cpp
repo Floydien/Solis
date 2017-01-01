@@ -42,9 +42,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-	if(device) {
-		delete device;
-	}
+	delete device;
 }
 
 void Game::init() {
@@ -64,6 +62,7 @@ void Game::init() {
 	//	//set the blocks to the building
 	//}
 
+
 	device = new SolisDevice(VideoDriverType::eOpenGL, 1280, 720);
 	driver = device->getVideoDriver();
 	scene = device->getScene();
@@ -72,42 +71,36 @@ void Game::init() {
 	scene->addToScene((new Node(Transform(), "Field"))
 		->addComponent(field));
 
-	field->setBlock(BlockType::eTree, 10, 10);
 
 	scene->addToScene((new Node(Transform(glm::vec3(-0.5,0,-0.5)), "Generated Field"))
 		->addComponent(new RenderComponent(
 			scene->getMesh(generateField(32)),
 			new Material(driver->getTexture("solis.png")))));
 
-	Player *player = new Player(field);
 	scene->addToScene((new Node(Transform(glm::vec3(0,0,0), glm::quat(), glm::vec3(0.5,0.5,0.5)), "Player"))
-		->addComponent(player)
+		->addComponent(new Player(field))
 		->addComponent(new RenderComponent(
 			scene->getMesh("Person.obj"),
 			new Material(driver->getTexture("solis.png")))));
-	player->init();
 
 	driver->addShaderFromFile("texture");
 
 	scene->addCamera();
 	scene->getActiveCamera()->setRotationSpeed(8);
+	scene->init();
+
+	field->setBlock(BlockType::eTree, 10, 10);
 }
 
 #include <chrono>
 #include <thread>
 
 void Game::run() {
-	// Logger::start();
-	// Logger::write(LogType::eWarning, "hi", true);
-	// Logger::write(LogType::eWarning, "hi", false);
-	// Logger::write(LogType::eWarning, "hi", true);
-	// Logger::write(LogType::eWarning, "hi", true);
-	// Logger::end();
-
+	
 	float fps = 120;
 	float time_per_frame = 1.0f/fps;
-	float counter = 0;
-	int counter2 = 0;
+	float time_counter = 0;
+	int frame_counter = 0;
 
 	auto start = std::chrono::steady_clock::now();
 	auto end = start;
@@ -115,14 +108,14 @@ void Game::run() {
 
 
 	while(device->run()) {
-		device->getInput()->isKeyDown(KeyCode::eKey0);
 		start = std::chrono::steady_clock::now();
 		diff = std::chrono::duration_cast<std::chrono::duration<float>>(start - end);
-		counter2++;
-		if((counter += diff.count()) >= 1.0) {
-			printf("Frames per second: %d\n", counter2);
-			counter -= 1.0;
-			counter2 = 0;
+
+		frame_counter++;
+		if((time_counter += diff.count()) >= 1.0) {
+			printf("Frames per second: %d\n", frame_counter);
+			time_counter -= 1.0;
+			frame_counter = 0;
 		}
 
 		driver->clearScreenBuffer();

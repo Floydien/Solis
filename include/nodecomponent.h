@@ -9,11 +9,13 @@ public:
 
 	virtual ~NodeComponent() {};
 
+	virtual void init() {};
 	virtual void input(float, SolisDevice *) {};
 	virtual void update(float) {};
 	virtual void render(const VideoDriver *) const {};
 
 	inline void setParent(Node *parent) { this->parent = parent; };
+	inline Node *getParent() 			{ return parent; };
 
 	inline Transform *getTransform() { return parent->getTransform();};
 	inline const Transform &getTransform() const { return *parent->getTransform();};

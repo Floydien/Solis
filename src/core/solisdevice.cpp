@@ -48,7 +48,6 @@ SolisDevice::~SolisDevice() {
     if(activeScene) {
         delete activeScene;
     }
-    printf("completed deleting scene\n");
 
     if(input) {
         delete input;

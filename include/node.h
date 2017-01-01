@@ -20,6 +20,7 @@ public:
 	Node *addChild(Node *);
 	Node *addComponent(NodeComponent *);
 
+	void init();
 	void input(float, SolisDevice *);
 	void update(float);
 	void render(const VideoDriver *) const;

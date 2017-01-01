@@ -17,6 +17,7 @@ public:
 	inline std::shared_ptr<BlockData> getContent() { return content; };
 	inline BlockType getType() const { return content->getType(); };
 
+	virtual void init() {};
 	virtual void input(float, SolisDevice *) {};
 	virtual void update(float) {};
 	virtual void render(const VideoDriver *) const {};

@@ -23,6 +23,7 @@ public:
 	inline VideoDriver *getVideoDriver() { return driver; };
 	inline Camera *getActiveCamera() { return activeCamera; };
 
+	void init();
 	void input(float);
 	void updateScene(float);
 	void renderScene() const;

@@ -6,10 +6,9 @@ ifeq ($(OS),Windows_NT)
 else
 	LDFLAGS = -lGL -lGLEW -lglfw -lassimp -lSOIL
 endif
-SOURCES := $(wildcard  src/*.cpp src/game/*.cpp src/core/*.cpp src/light/*.cpp src/render/*.cpp src/render/opengl/*.cpp )
-EXECUTABLE=hello.exe
+SOURCES := $(wildcard  src/*.cpp src/game/*.cpp src/core/*.cpp src/render/*.cpp src/render/opengl/*.cpp )
+EXECUTABLE = hello
 
-ALL_SOURCES := src/main.cpp $(SOURCES) 
 ALL_OBJECTS := $(SOURCES:.cpp=.o)
 
 

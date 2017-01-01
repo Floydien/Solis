@@ -1,7 +1,6 @@
 #include "rendercomponent.h"
 
 RenderComponent::~RenderComponent() {
-	delete mesh;
 	delete material;
 }
 

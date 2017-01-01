@@ -10,7 +10,7 @@ public:
 		field(field) {};
 	virtual ~Player() {};
 
-	void init();
+	virtual void init();
 	virtual void input(float, SolisDevice *);
 	virtual void update(float);
 	virtual void render(const VideoDriver *) const {};
