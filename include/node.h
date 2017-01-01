@@ -20,6 +20,10 @@ public:
 	Node *addChild(Node *);
 	Node *addComponent(NodeComponent *);
 
+	/* 	Deletes the child node if its a direct child.
+		Returns true if the passed node was found and deleted. */
+	bool removeChild(Node *);
+
 	void init();
 	void input(float, SolisDevice *);
 	void update(float);

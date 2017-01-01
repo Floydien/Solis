@@ -40,6 +40,7 @@ private:
 
 	Camera *activeCamera;
 
+	std::vector<Mesh *> meshes;
 	//remove later on please
 	int meshcount = 0;
 };

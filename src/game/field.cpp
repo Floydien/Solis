@@ -25,7 +25,7 @@ Node *Field::setBlock(BlockType type, size_t x, size_t y) {
 	}
 
 	if (blocks[x][y]->getType() != BlockType::eEmpty) {
-		/* remove the old node */
+		removeBlock(x, y);
 	}
 
 	if (type != BlockType::eEmpty) {
@@ -47,5 +47,10 @@ void Field::removeBlock(size_t x, size_t y) {
 		return;
 	}
 
-	
+	parent->removeChild(blocks[x][y]->getParent());
+
+	blocks[x][y] = new Block(BlockType::eEmpty);
+	parent->addChild((new Node(Transform(glm::vec3(x, 0, y)), 
+		"Block " + std::to_string(x) + " " + std::to_string(y)))
+		->addComponent(blocks[x][y]));
 }

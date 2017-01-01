@@ -37,16 +37,17 @@ SolisDevice::SolisDevice(VideoDriverType type, uint32_t width, uint32_t height) 
 
 SolisDevice::~SolisDevice() {
     glfwTerminate();
+
+    if(activeScene) {
+        delete activeScene;
+    }
+
     if(videoDriver) {
         if(ACTIVE_VIDEO_DRIVER_TYPE == VideoDriverType::eOpenGL) {
             delete static_cast<OpenGLDriver *>(videoDriver);
         } else if(ACTIVE_VIDEO_DRIVER_TYPE == VideoDriverType::eVulkan) {
             delete static_cast<VulkanDriver *>(videoDriver);
         }
-    }
-
-    if(activeScene) {
-        delete activeScene;
     }
 
     if(input) {

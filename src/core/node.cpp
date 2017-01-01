@@ -28,6 +28,17 @@ Node *Node::addComponent(NodeComponent *component) {
 	return this;
 }
 
+bool Node::removeChild(Node *node) {
+	for (std::vector<Node *>::iterator it = children.begin(); 
+		it != children.end(); ++it) {
+		if (*it == node) {
+			children.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
 void Node::init() {
 	for (size_t i = 0; i < components.size(); i++) {
 		components[i]->init();

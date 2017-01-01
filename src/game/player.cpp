@@ -50,7 +50,12 @@ void Player::update(float) {
 			getTransform()->setPosition(prevPosition);
 			return;
 		}
-		if(field->blocks.at((int)pos.x).at((int)pos.z)->getType() != BlockType::eEmpty) {
+
+		auto block = field->blocks.at((int)pos.x).at((int)pos.z);
+		if(block->getType() == BlockType::eTree) {
+			field->removeBlock((int)pos.x, (int)pos.z);
+			prevPosition = *getTransform()->getPosition();
+		} else if(block->getType() != BlockType::eEmpty) {
 			getTransform()->setPosition(prevPosition);
 		} else {
 			prevPosition = *getTransform()->getPosition();

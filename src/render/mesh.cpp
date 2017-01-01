@@ -5,7 +5,8 @@
 
 std::map<const std::string, VertexBuffer *> Mesh::vbufferMap;
 
-Mesh::Mesh(const std::string &filename) {
+Mesh::Mesh(const std::string &filename) :
+	name(filename) {
 	auto it = vbufferMap.find(filename);
 	if(it != vbufferMap.end()) {
 		buffer = it->second;
@@ -49,7 +50,8 @@ Mesh::Mesh(const std::string &filename) {
 	}
 }
 
-Mesh::Mesh(const std::string &name, VertexBuffer *buffer) {
+Mesh::Mesh(const std::string &name, VertexBuffer *buffer)  :
+	name(name) {
 	auto it = vbufferMap.find(name);
 	if(it != vbufferMap.end()) {
 		this->buffer = it->second;
@@ -61,7 +63,12 @@ Mesh::Mesh(const std::string &name, VertexBuffer *buffer) {
 }
 
 Mesh::~Mesh() {
-    if(buffer && buffer->removeReference()) {
-        delete buffer;
-    }
+	auto it = vbufferMap.find(name);
+	if (it != vbufferMap.end()) {
+    	if(buffer->removeReference()) {
+    		//remove from map if all references are gone
+    		vbufferMap.erase(it);
+        	delete buffer;
+    	}
+	}
 }

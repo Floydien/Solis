@@ -1,8 +1,6 @@
 #pragma once
 #include "node.h"
 #include "solisdevice.h"
-// #include "../render/window.h"
-// #include "../render/shader.h"
 
 class NodeComponent {
 public:
@@ -15,7 +13,7 @@ public:
 	virtual void render(const VideoDriver *) const {};
 
 	inline void setParent(Node *parent) { this->parent = parent; };
-	inline Node *getParent() 			{ return parent; };
+	inline Node *getParent() const		{ return parent; };
 
 	inline Transform *getTransform() { return parent->getTransform();};
 	inline const Transform &getTransform() const { return *parent->getTransform();};

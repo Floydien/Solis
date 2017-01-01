@@ -11,6 +11,7 @@ public:
 
 	inline const VertexBuffer *getVertexBuffer() const { return buffer; };
 private:
+	std::string name;
 	VertexBuffer *buffer;
 
 	static std::map<const std::string, VertexBuffer *> vbufferMap;

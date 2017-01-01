@@ -89,14 +89,14 @@ void Game::init() {
 	scene->getActiveCamera()->setRotationSpeed(8);
 	scene->init();
 
-	field->setBlock(BlockType::eTree, 10, 10);
+	field->setBlock(BlockType::eTree, 3, 3);
 }
 
 #include <chrono>
 #include <thread>
 
 void Game::run() {
-	
+
 	float fps = 120;
 	float time_per_frame = 1.0f/fps;
 	float time_counter = 0;
