@@ -5,7 +5,7 @@
 class NodeComponent {
 public:
 
-	virtual ~NodeComponent() {};
+	virtual ~NodeComponent() = default;
 
 	virtual void init() {};
 	virtual void input(float, SolisDevice *) {};

@@ -1,9 +1,10 @@
 #include "player.h"
-
+#include "scene.h"
 //TODO: Find more elegant solution for this
 static bool pressed[4];
 
 void Player::init() {
+
 	prevPosition = *getTransform()->getPosition();
 }
 

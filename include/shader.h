@@ -4,8 +4,8 @@
 
 class Shader {
 public:
-    Shader() {};
-    virtual ~Shader() {};
+    Shader() = default;
+    virtual ~Shader() = default;
 
     virtual void bind() const {};
 

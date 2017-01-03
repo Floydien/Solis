@@ -6,7 +6,7 @@ public:
 	ReferenceCounter():
 		refCount(1) {};
 
-	inline int getReferenceCount() { return refCount; };
+	inline int getReferenceCount() const { return refCount; };
 
 	inline void addReference() { refCount++; };
 	inline bool removeReference() { refCount--; return refCount == 0; };

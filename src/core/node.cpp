@@ -3,9 +3,14 @@
 #include "scene.h"
 
 Node::~Node() {
-	for (size_t i = 0; i < components.size(); i++) {
+	for (auto component : components) {
+		delete component;
+	}
+	for (auto child : children) {
+		delete child;
+	}
+	/*for (size_t i = 0; i < components.size(); i++) {
 		if(components[i]) {
-			delete components[i];
 		}
 	}
 
@@ -13,10 +18,11 @@ Node::~Node() {
 		if(children[i]) {
 			delete children[i];
 		}
-	}	
+	}*/	
 }
 
 Node *Node::addChild(Node *child) {
+	child->setScene(scene);
 	children.push_back(child);
 	child->getTransform()->setParent(&transform);
 	return this;	
@@ -29,9 +35,10 @@ Node *Node::addComponent(NodeComponent *component) {
 }
 
 bool Node::removeChild(Node *node) {
-	for (std::vector<Node *>::iterator it = children.begin(); 
+	for (auto it = children.begin(); 
 		it != children.end(); ++it) {
 		if (*it == node) {
+			delete *it;
 			children.erase(it);
 			return true;
 		}
@@ -40,45 +47,46 @@ bool Node::removeChild(Node *node) {
 }
 
 void Node::init() {
-	for (size_t i = 0; i < components.size(); i++) {
-		components[i]->init();
+	for (auto component : components) {
+		component->init();
 	}
-	for (size_t i = 0; i < children.size(); i++) {
-		children[i]->init();
+	for (auto child : children) {
+		child->init();
 	}
 }
 void Node::input(float delta, SolisDevice *device) {
-	for (size_t i = 0; i < components.size(); i++) {
-		components[i]->input(delta, device);
+	for (auto component : components) {
+		component->input(delta, device);
 	}
-	for (size_t i = 0; i < children.size(); i++) {
-		children[i]->input(delta, device);
+	for (auto child : children) {
+		child->input(delta, device);
 	}
 }
 
 void Node::update(float delta) {
-	for (size_t i = 0; i < components.size(); i++) {
-		components[i]->update(delta);
+	for (auto component : components) {
+		component->update(delta);
 	}
-	for (size_t i = 0; i < children.size(); i++) {
-		children[i]->update(delta);
+	for (auto child : children) {
+		child->update(delta);
 	}
 }
 
 void Node::render(const VideoDriver *driver) const {
-	for (size_t i = 0; i < components.size(); i++) {
-		components[i]->render(driver);
+	for (auto component : components) {
+		component->render(driver);
 	}
-	for (size_t i = 0; i < children.size(); i++) {
-		children[i]->render(driver);
+	for (auto child : children) {
+		child->render(driver);
 	}
 }
 
 void Node::setScene(Scene *scene) {
 	if(this->scene != scene) {
 		this->scene = scene;
-		for (size_t i = 0; i < children.size(); i++) {
-			children[i]->setScene(scene);
+
+		for (auto child : children) {
+			child->setScene(scene);
 		}
 	}
 }

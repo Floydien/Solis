@@ -7,7 +7,7 @@
 class Texture {
 public:
 	Texture(const std::string &) {};
-	virtual ~Texture() {};
+	virtual ~Texture() = default;
 
 	virtual void bind(uint32_t) const {};
 };

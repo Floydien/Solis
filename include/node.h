@@ -1,10 +1,9 @@
 #pragma once
-#include "solisdevice.h"
-#include "videodriver.h"
-// #include "shader.h"
-#include "transform.h"
 #include <vector>
 #include <glm/glm.hpp>
+#include "solisdevice.h"
+#include "videodriver.h"
+#include "transform.h"
 
 class NodeComponent;
 class Scene;
@@ -13,8 +12,9 @@ class Scene;
 class Node {
 public:
 	Node(const Transform &transform = Transform(), const std::string &name = "") :
+		scene(nullptr),
 		transform(transform),
-		name(name) {};
+		name(std::move(name)) {};
 	~Node();
 
 	Node *addChild(Node *);

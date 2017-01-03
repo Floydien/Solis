@@ -3,18 +3,21 @@
 
 
 Scene::~Scene() {
+	delete root;
+
 	if(activeCamera) {
 		delete activeCamera;
 	}
+
 }
 
 void Scene::addToScene(Node *node) {
-	root.addChild(node);
+	root->addChild(node);
 	node->setScene(this);
 }
 
 void Scene::init() {
-	root.init();
+	root->init();
 }
 
 void Scene::input(float delta) {
@@ -22,18 +25,18 @@ void Scene::input(float delta) {
 		activeCamera->input(delta, device);
 	}
 
-	root.input(delta, device);
+	root->input(delta, device);
 }
 
 void Scene::updateScene(float delta) {
-	root.update(delta);
+	root->update(delta);
 }
 
 void Scene::renderScene() const {
 	driver->getActiveShader()->bind();
 	driver->getActiveShader()->updateUniformMatrix4fv("camera.viewProjection", activeCamera->getViewProjection());
 
-	root.render(driver);
+	root->render(driver);
 }
 
 // void Scene::addLight(Light *light) {

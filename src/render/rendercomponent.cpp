@@ -1,6 +1,16 @@
 #include "rendercomponent.h"
+#include "opengl/opengldriver.h"
 
 RenderComponent::~RenderComponent() {
+	/* If this is the last mesh thats using this vertexbuffer
+			then remove it from the gpu */
+	if (mesh->getVertexBuffer()->getReferenceCount() == 1) {
+
+		auto link =parent->getScene()->getVideoDriver()->getBufferLink(mesh->getVertexBuffer());
+		if (link != nullptr) {
+			parent->getScene()->getVideoDriver()->deleteBuffer(link);
+		}
+	}
 	delete mesh;
 	delete material;
 }

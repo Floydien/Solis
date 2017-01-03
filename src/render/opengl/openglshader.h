@@ -36,7 +36,7 @@ public:
     void updateUniform4f(const std::string &, float, float, float, float) const;
     void updateUniform4fv(const std::string &, const glm::vec4 &) const;
     void updateUniformMatrix4fv(const std::string &, const glm::mat4 &) const;
-    void updateUniformMatrix4fv(const std::string &, const std::vector<glm::mat4> &) const;
+    // void updateUniformMatrix4fv(const std::string &, const std::vector<glm::mat4> &) const;
     // void updateUniforms(const Transform &, const Material &, const Camera &) const;
 
 private:

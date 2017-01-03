@@ -26,7 +26,7 @@ public:
 	void deleteShader()									{};
 
 	Texture *getTexture(const std::string &)			{ return nullptr; };
-	void bindTexture(Texture *)							{};
+	void bindTexture(Texture *)	const					{};
 
 	inline void clearScreenBuffer() 					{};
 

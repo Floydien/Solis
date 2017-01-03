@@ -1,5 +1,5 @@
-CC = g++
-CFLAGS = -m64 -c -Wall -Wextra -I/mingw64/include -Iinclude -std=c++14 
+CC = clang++
+CFLAGS = -m64 -c -Wall -Wextra -I/mingw64/include -Iinclude -std=c++14  -g
 	
 ifeq ($(OS),Windows_NT)
 	LDFLAGS = -L/mingw64/lib -lopengl32 -lglew32 -lglfw3 -lassimp -lvulkan-1

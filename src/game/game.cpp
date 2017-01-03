@@ -68,11 +68,9 @@ void Game::init() {
 	scene = device->getScene();
 
 	field = new Field();
-	scene->addToScene((new Node(Transform(), "Field"))
-		->addComponent(field));
-
-
-	scene->addToScene((new Node(Transform(glm::vec3(-0.5,0,-0.5)), "Generated Field"))
+	
+	scene->addToScene((new Node(Transform(glm::vec3(-0.5,0,-0.5)), "Field"))
+		->addComponent(field)
 		->addComponent(new RenderComponent(
 			scene->getMesh(generateField(32)),
 			new Material(driver->getTexture("solis.png")))));
@@ -105,7 +103,7 @@ void Game::run() {
 	auto start = std::chrono::steady_clock::now();
 	auto end = start;
 	std::chrono::duration<float> diff;
-
+	
 
 	while(device->run()) {
 		start = std::chrono::steady_clock::now();

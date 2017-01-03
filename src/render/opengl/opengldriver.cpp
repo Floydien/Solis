@@ -30,7 +30,7 @@ OpenGLDriver::~OpenGLDriver() {
         delete activeShader;
 }
 
-OpenGLDriver::VBLink *OpenGLDriver::getBufferLink(const VertexBuffer *vb) const{
+OpenGLDriver::VBLink *OpenGLDriver::getBufferLink(const VertexBuffer *vb) const {
     if(!vb) {
         return nullptr;
     }

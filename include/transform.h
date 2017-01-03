@@ -17,9 +17,9 @@ public:
 				rotation(rotation),
 				scale(scale),
 				parentMatrix(glm::mat4(1)),
-				parent(0)
+				parent(nullptr)
 				{};
-	~Transform() {};
+	~Transform() = default;
 
 	void rotate(const glm::quat& rotation);
 	void rotate(const glm::vec3& axis, float angle);

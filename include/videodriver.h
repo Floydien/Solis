@@ -19,11 +19,13 @@ protected:
 		const VertexBuffer *vertexBuffer;
 	};
 public:
-	VideoDriver(SolisDevice *device) : device(device) {};
-	virtual ~VideoDriver() {};
+	VideoDriver(SolisDevice *device) : 
+		device(device),
+		activeShader(nullptr) {};
+	virtual ~VideoDriver() = default;
 
-	virtual VBLink *getBufferLink(const VertexBuffer *) const { return nullptr; };
-	virtual VBLink *createBuffer(const VertexBuffer *) { return nullptr; };
+	virtual VBLink *getBufferLink(const VertexBuffer *) const = 0;
+	virtual VBLink *createBuffer(const VertexBuffer *) = 0;
 	virtual void drawVertexBuffer(const VertexBuffer *) const {};
 	virtual void drawBufferLink(VBLink *) const {};
 	virtual void deleteBuffer(VBLink *) {};

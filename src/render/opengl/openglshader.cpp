@@ -72,7 +72,7 @@ void OpenGLShader::updateUniformMatrix4fv(const std::string &uniformName, const 
     glUniformMatrix4fv(uniformMap.find(uniformName)->second, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void OpenGLShader::updateUniformMatrix4fv(const std::string &uniformName, const std::vector<glm::mat4> &matrixlist) const {
+/*void OpenGLShader::updateUniformMatrix4fv(const std::string &uniformName, const std::vector<glm::mat4> &matrixlist) const {
     if(matrixlist.size() == 0) {
         glUniformMatrix4fv(uniformMap.find(uniformName)->second, 0, GL_FALSE, 0);
         return;
@@ -86,7 +86,7 @@ void OpenGLShader::updateUniformMatrix4fv(const std::string &uniformName, const 
         }
     }
     glUniformMatrix4fv(uniformMap.find(uniformName)->second, matrixlist.size(), GL_FALSE, array);
-}
+}*/
 
 void OpenGLShader::addVertexShader(const std::string &text) {
     addProgram(text, GL_VERTEX_SHADER);

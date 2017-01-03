@@ -5,6 +5,7 @@ Field::Field() {
 }
 
 Field::~Field() {
+
 }
 
 void Field::init() {
