@@ -1,10 +1,11 @@
 #include "player.h"
 #include "scene.h"
+
 //TODO: Find more elegant solution for this
 static bool pressed[4];
+const size_t Player::MAX_CARRY_AMOUNT = 10;
 
 void Player::init() {
-
 	prevPosition = *getTransform()->getPosition();
 }
 
@@ -41,7 +42,6 @@ void Player::input(float, SolisDevice *device) {
 	} else {
 		pressed[3] = false;
 	}
-	
 }
 
 void Player::update(float) {
@@ -54,8 +54,14 @@ void Player::update(float) {
 
 		auto block = field->blocks.at((int)pos.x).at((int)pos.z);
 		if(block->getType() == BlockType::eTree) {
-			field->removeBlock((int)pos.x, (int)pos.z);
-			prevPosition = *getTransform()->getPosition();
+			auto tree = static_cast<Tree *>(block->getContent().get());
+			carrying = tree->chopWood(2);
+			if (!tree->getWoodAmount()) {
+				field->removeBlock((int)pos.x, (int)pos.z);
+				prevPosition = *getTransform()->getPosition();
+			} else {
+				getTransform()->setPosition(prevPosition);
+			}
 		} else if(block->getType() != BlockType::eEmpty) {
 			getTransform()->setPosition(prevPosition);
 		} else {

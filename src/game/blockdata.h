@@ -15,34 +15,29 @@ enum class BuildingType {
 class BlockData {
 public:
 	//type of block. eg Dirt, Buildings, trees, etc
-	BlockData(BlockType type) : type(type) {};
+	BlockData() = default;
 
-	inline BlockType getType() { return type; };
-
-private:
-	const BlockType type;		
+	virtual inline BlockType getType() const = 0;	
 };
 
 class EmptyBlock : public BlockData {
 public:
-	EmptyBlock() : BlockData(BlockType::eEmpty) {};
+	EmptyBlock() = default;
+	inline BlockType getType() const override { return BlockType::eEmpty; };
 };
 
 class DirtBlock : public BlockData {
 public:
-	DirtBlock() : BlockData(BlockType::eDirt) {};
-};
-
-class Tree : public BlockData {
-public:
-	Tree() :BlockData(BlockType::eTree) {};
+	DirtBlock() = default;
+	inline BlockType getType() const override { return BlockType::eDirt; };
 };
 
 class Building : public BlockData {
 public:
-	Building(const glm::vec3 &halfExtent): BlockData(BlockType::eBuilding), halfExtent(halfExtent) {};
+	Building(const glm::vec3 &halfExtent): BlockData(), halfExtent(halfExtent) {};
 	//building type
 	inline const glm::vec3 &getHalfExtent() { return halfExtent; };
+	inline BlockType getType() const override { return BlockType::eBuilding; };
 
 protected:
 	glm::vec3 halfExtent;

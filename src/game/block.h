@@ -1,6 +1,7 @@
 #pragma once
 #include "nodecomponent.h"
 #include "blockdata.h"
+#include "tree.h"
 #include <memory>
 
 class Block : public NodeComponent {

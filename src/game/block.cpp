@@ -8,10 +8,10 @@ void Block::setContent(BlockType type) {
 			content = EMPTY_BLOCK;
 			break;
 		case BlockType::eTree :
-			content = std::make_shared<BlockData>(Tree());
+			content = std::make_shared<Tree>(Tree());
 			break;
 		case BlockType::eDirt :
-			content = std::make_shared<BlockData>(DirtBlock());
+			content = std::make_shared<DirtBlock>(DirtBlock());
 			break;
 		case BlockType::eBuilding :
 			/* TODO: choose a building*/

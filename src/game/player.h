@@ -6,15 +6,21 @@
 
 class Player : public NodeComponent {
 public:
-	Player(Field *field) : 
+	Player(Field *field) :
+		NodeComponent(),
 		field(field) {};
-	virtual ~Player() {};
+	~Player() override = default;
 
-	virtual void init();
-	virtual void input(float, SolisDevice *);
-	virtual void update(float);
-	virtual void render(const VideoDriver *) const {};
+	void init() override;
+	void input(float, SolisDevice *) override;
+	void update(float) override;
+	void render(const VideoDriver *) const override {};
+	
 private:
+	static const size_t MAX_CARRY_AMOUNT;
+
 	Field *field;
 	glm::vec3 prevPosition;
+
+	size_t carrying;
 };

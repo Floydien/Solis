@@ -3,10 +3,10 @@
 #include "scene.h"
 
 Node::~Node() {
-	for (auto component : components) {
+	for (auto &component : components) {
 		delete component;
 	}
-	for (auto child : children) {
+	for (auto &child : children) {
 		delete child;
 	}
 	/*for (size_t i = 0; i < components.size(); i++) {
