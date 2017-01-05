@@ -1,5 +1,6 @@
 #pragma once
 #include "blockdata.h"
+#include <cstdio>
 
 class Tree : public BlockData {
 public:

@@ -8,7 +8,8 @@ class Player : public NodeComponent {
 public:
 	Player(Field *field) :
 		NodeComponent(),
-		field(field) {};
+		field(field),
+		carrying(0) {};
 	~Player() override = default;
 
 	void init() override;

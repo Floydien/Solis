@@ -1,6 +1,8 @@
 #pragma once
-#include "node.h"
 #include "solisdevice.h"
+#include "transform.h"
+
+class Node;
 
 class NodeComponent {
 public:
@@ -12,11 +14,11 @@ public:
 	virtual void update(float) {};
 	virtual void render(const VideoDriver *) const {};
 
-	inline void setParent(Node *parent) { this->parent = parent; };
-	inline Node *getParent() const		{ return parent; };
+	void setParent(Node *parent);
+	Node *getParent() const;
 
-	inline Transform *getTransform() { return parent->getTransform();};
-	inline const Transform &getTransform() const { return *parent->getTransform();};
+	Transform *getTransform();
+	const Transform &getTransform() const;
 
 protected:
 	Node *parent;

@@ -34,16 +34,18 @@ public:
 
 class Building : public BlockData {
 public:
-	Building(const glm::vec3 &halfExtent): BlockData(), halfExtent(halfExtent) {};
-	//building type
-	inline const glm::vec3 &getHalfExtent() { return halfExtent; };
-	inline BlockType getType() const override { return BlockType::eBuilding; };
+	Building(const glm::vec3 &extent): BlockData(), extent(extent) {};
 
+	inline BlockType getType() const override { return BlockType::eBuilding; };
+	virtual inline BuildingType getBuildingType() const = 0;	
+
+	inline const glm::vec3 &getExtent() { return extent; };
 protected:
-	glm::vec3 halfExtent;
+	glm::vec3 extent;
 };
 
 class Sawmill : public Building {
 public:
-	Sawmill() : Building({1.0, 0.5, 1.0}) {};
+	Sawmill() : Building({2.0, 1.0, 1.0}) {};
+	inline BuildingType getBuildingType() const override { return BuildingType::eSawmill; };
 };

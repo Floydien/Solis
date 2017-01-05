@@ -1,13 +1,13 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
+#include <memory>
 #include "solisdevice.h"
 #include "videodriver.h"
 #include "transform.h"
-
-class NodeComponent;
+#include "nodecomponent.h"
+//class NodeComponent;
 class Scene;
-
 
 class Node {
 public:
@@ -15,7 +15,7 @@ public:
 		scene(nullptr),
 		transform(transform),
 		name(std::move(name)) {};
-	~Node();
+	~Node() = default;
 
 	Node *addChild(Node *);
 	Node *addComponent(NodeComponent *);
@@ -37,8 +37,8 @@ public:
 private:
 	Scene *scene;
 
-	std::vector<Node *> children;
-	std::vector<NodeComponent *> components;
+	std::vector<std::shared_ptr<Node>> children;
+	std::vector<std::unique_ptr<NodeComponent>> components;
 
 	Transform transform;
 	const std::string name;

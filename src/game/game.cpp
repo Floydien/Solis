@@ -20,7 +20,7 @@ VertexBuffer *generateField(uint32_t size) {
 
 			uvCoord = {(float) (i % size) , (float) (k % size)};
 			normal = {0, 1, 0};
-			vertices.push_back(Vertex(position, uvCoord, normal));
+			vertices.emplace_back(position, uvCoord, normal);
 		}
 	}
 
@@ -88,6 +88,7 @@ void Game::init() {
 	scene->init();
 
 	field->setBlock(BlockType::eTree, 3, 3);
+	field->setBlock(BlockType::eTree, 3, 5);
 }
 
 #include <chrono>
