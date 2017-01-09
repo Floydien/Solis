@@ -1,16 +1,6 @@
 #include "node.h"
 #include "scene.h"
 
-
-Scene::~Scene() {
-	delete root;
-
-	if(activeCamera) {
-		delete activeCamera;
-	}
-
-}
-
 void Scene::addToScene(Node *node) {
 	root->addChild(node);
 	node->setScene(this);
@@ -59,8 +49,9 @@ Mesh *Scene::getMesh(VertexBuffer *buffer) {
 void Scene::addCamera(const glm::vec3 &pos) {
 	//TODO: implement multiple cameras
 
-	if(activeCamera != nullptr) {
-		delete activeCamera;
+	if(activeCamera) {
+		activeCamera.reset();
 	}
-	activeCamera = new Camera(45.0f, (float)device->getWidth()/(float)device->getHeight(), 0.1f, 1000.0f, pos);
+	activeCamera = std::make_unique<Camera>(
+		45.0f, (float)device->getWidth()/(float)device->getHeight(), 0.1f, 1000.0f, pos);
 }

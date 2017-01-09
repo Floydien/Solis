@@ -9,8 +9,8 @@
     #include "stb_image.h"
 #endif
 
-Image::Image(const std::string &filename) {
-	name = filename;
+Image::Image(const std::string &filename) :
+    name(std::move(filename)) {
 
     uint8_t *data = 0;
 
