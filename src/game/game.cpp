@@ -6,43 +6,12 @@
 #include "debug/logger.h"
 #include "player.h"
 
-VertexBuffer *generateField(uint32_t size) {
-	std::vector<Vertex> vertices;
-	std::vector<uint32_t> indices;
-
-	glm::vec3 position;
-	glm::vec2 uvCoord;
-	glm::vec3 normal;
-
-	for(size_t i = 0; i < size + 1; i++) {
-		for(size_t k = 0; k < size + 1; k++) {
-			position = {i, 0, k};
-
-			uvCoord = {(float) (i % size) , (float) (k % size)};
-			normal = {0, 1, 0};
-			vertices.emplace_back(position, uvCoord, normal);
-		}
-	}
-
-	for(size_t i = 0; i < size * size; i++) {
-		indices.push_back((i + i / size));
-		indices.push_back((i + i / size) + 1);
-		indices.push_back((i + i / size) + (size + 1));
-
-		indices.push_back((i + i / size) + 1);
-		indices.push_back((i + i / size) + (size + 2));
-		indices.push_back((i + i / size) + (size + 1));
-	}
-
-	return new VertexBuffer(vertices, indices);
-}
-
 Game::Game() {
 
 }
 
 Game::~Game() {
-	delete device;
+	//delete device;
 }
 
 void Game::init() {
@@ -62,25 +31,21 @@ void Game::init() {
 	//	//set the blocks to the building
 	//}
 
-
 	device = new SolisDevice(VideoDriverType::eOpenGL, 1280, 720);
 	driver = device->getVideoDriver();
 	scene = device->getScene();
 
 	field = new Field();
 	
+
 	scene->addToScene((new Node(Transform(glm::vec3(-0.5,0,-0.5)), "Field"))
-		->addComponent(field)
-		->addComponent(new RenderComponent(
-			scene->getMesh(generateField(32)),
-			new Material(driver->getTexture("solis.png")))));
+		->addComponent(field));
 
+	/* add a player to the scene */
 	scene->addToScene((new Node(Transform(glm::vec3(0,0,0), glm::quat(), glm::vec3(0.5,0.5,0.5)), "Player"))
-		->addComponent(new Player(field))
-		->addComponent(new RenderComponent(
-			scene->getMesh("Person.obj"),
-			new Material(driver->getTexture("solis.png")))));
+		->addComponent(new Player(field)));
 
+	driver->addShaderFromFile("gui");
 	driver->addShaderFromFile("texture");
 
 	scene->addCamera();
@@ -93,10 +58,11 @@ void Game::init() {
 
 #include <chrono>
 #include <thread>
+#include "gui/guibutton.h"
 
 void Game::run() {
 
-	float fps = 120;
+	float fps = 60;
 	float time_per_frame = 1.0f/fps;
 	float time_counter = 0;
 	int frame_counter = 0;
@@ -105,6 +71,10 @@ void Game::run() {
 	auto end = start;
 	std::chrono::duration<float> diff;
 	
+
+	GUIButton button("random image", Rectangle({300, 250}, {500, 400}));
+	button.init(scene);
+	button.setCallback([this](){ field->build(BuildingType::eSawmill,5,5); });
 
 	while(device->run()) {
 		start = std::chrono::steady_clock::now();
@@ -121,7 +91,13 @@ void Game::run() {
 		scene->input(diff.count() * 10);
 		scene->updateScene(diff.count() * 10);
 
+		driver->bindShader("texture");
 		scene->renderScene();
+		
+		driver->bindShader("gui");
+		button.update(device);
+		button.draw(driver);
+
 
 
 		if(diff.count() < time_per_frame) {
@@ -129,5 +105,4 @@ void Game::run() {
 		}
 		end = start;
 	}
-
 }

@@ -29,6 +29,8 @@ public:
 
 	void setFramerate(uint32_t) { /* TODO: Implement framerate settings*/ };
 	bool keyPressed(int32_t key) { return glfwGetKey(window, key) == GLFW_PRESS; };
+	bool mousePressed(int32_t key) { return glfwGetMouseButton(window, key) == GLFW_PRESS; };
+	glm::vec2 getCursorPosition();
 	Input *getInput() { return input; };
 
 private:

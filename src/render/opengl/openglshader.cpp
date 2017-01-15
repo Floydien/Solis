@@ -52,6 +52,10 @@ void OpenGLShader::updateUniform1f(const std::string &uniformName, float x) cons
     glUniform1f(uniformMap.find(uniformName)->second, x);
 }
 
+void OpenGLShader::updateUniform2i(const std::string &uniformName, int x, int y) const {
+    glUniform2i(uniformMap.find(uniformName)->second, x, y);
+}
+
 void OpenGLShader::updateUniform3f(const std::string &uniformName, float x, float y, float z) const {
     glUniform3f(uniformMap.find(uniformName)->second, x, y, z);
 }

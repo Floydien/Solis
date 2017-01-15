@@ -65,7 +65,7 @@ Mesh::Mesh(const std::string &name, VertexBuffer *buffer)  :
 Mesh::~Mesh() {
 	auto it = vbufferMap.find(name);
 	if (it != vbufferMap.end()) {
-    	if(buffer->removeReference()) {
+    	if(it->second->removeReference()) {
     		//remove from map if all references are gone
     		vbufferMap.erase(it);
         	delete buffer;

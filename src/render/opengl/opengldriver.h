@@ -25,9 +25,10 @@ public:
 	void drawBufferLink(VBLink *) const;
 	void deleteBuffer(VBLink *);
 
-	void addShaderFromFile(const std::string &filename);
+	void addShaderFromFile(const std::string &);
+	void bindShader(const std::string &);
 	OpenGLShader *getActiveShader() const;
-	void deleteShader();
+	void deleteShader(const std::string &);
 
 	Texture *getTexture(const std::string &);
 	void bindTexture(Texture *) const;

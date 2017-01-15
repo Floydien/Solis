@@ -37,11 +37,12 @@ Mesh *Scene::getMesh(const std::string &filename) {
 	Mesh *mesh = new Mesh(filename);
 	driver->createBuffer(mesh->getVertexBuffer());
 	return mesh;
+	return nullptr;
 }
 
-Mesh *Scene::getMesh(VertexBuffer *buffer) {
+Mesh *Scene::getMesh(const std::string &name, VertexBuffer *buffer) {
 	meshcount++;
-	Mesh *mesh = new Mesh("name" + std::to_string(meshcount), buffer);
+	Mesh *mesh = new Mesh(name, buffer);
 	driver->createBuffer(mesh->getVertexBuffer());
 	return mesh;
 }

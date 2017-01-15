@@ -17,7 +17,7 @@ public:
 	//type of block. eg Dirt, Buildings, trees, etc
 	BlockData() = default;
 
-	virtual inline BlockType getType() const = 0;	
+	virtual BlockType getType() const = 0;	
 };
 
 class EmptyBlock : public BlockData {

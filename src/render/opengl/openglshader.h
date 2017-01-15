@@ -31,6 +31,7 @@ public:
     void addUniform(const std::string &);
     void updateUniform1i(const std::string &, int) const;
     void updateUniform1f(const std::string &, float) const;
+    void updateUniform2i(const std::string &, int, int) const;
     void updateUniform3f(const std::string &, float, float, float) const;
     void updateUniform3fv(const std::string &, const glm::vec3 &) const;
     void updateUniform4f(const std::string &, float, float, float, float) const;

@@ -25,9 +25,6 @@ OpenGLDriver::~OpenGLDriver() {
             delete it->second;
         textureMap.erase(it);
     }
-
-    if(activeShader)
-        delete activeShader;
 }
 
 OpenGLDriver::VBLink *OpenGLDriver::getBufferLink(const VertexBuffer *vb) const {
@@ -118,17 +115,36 @@ void OpenGLDriver::drawVertexBuffer(const VertexBuffer *vbuffer) const {
 }
 
 
-void OpenGLDriver::addShaderFromFile(const std::string &filename) { 
-    activeShader = new OpenGLShader(filename); 
+void OpenGLDriver::addShaderFromFile(const std::string &name) {
+    auto it = activeShaders.find(name);
+    if (it != activeShaders.end()) {
+        activeShader = it->second;
+    } else {
+        activeShader = std::make_shared<OpenGLShader>(name);//new OpenGLShader(filename); 
+        activeShaders.insert(std::pair<const std::string, std::shared_ptr<Shader>>(name, activeShader));
+    }
+}
+
+void OpenGLDriver::bindShader(const std::string &name) {
+    auto it = activeShaders.find(name);
+    if (it != activeShaders.end()) {
+        activeShader = it->second;
+    }
+    activeShader->bind();
 }
 
 OpenGLShader *OpenGLDriver::getActiveShader() const{ 
-    return static_cast<OpenGLShader*>(activeShader); 
+    return static_cast<OpenGLShader*>(activeShader.get()); 
 };
 
-void OpenGLDriver::deleteShader() { 
-    if(activeShader) 
-        delete activeShader;
+void OpenGLDriver::deleteShader(const std::string &name) {
+    auto it = activeShaders.find(name);
+    if (it != activeShaders.end()) {
+        if (it->second == activeShader) {
+            activeShader.reset();
+        }
+        activeShaders.erase(it);
+    }
 }
 
 Texture *OpenGLDriver::getTexture(const std::string &filename) {

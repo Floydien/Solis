@@ -1,7 +1,42 @@
 #include "field.h"
 #include "rendercomponent.h"
 
+VertexBuffer *generateField(uint32_t size) {
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
+
+	glm::vec3 position;
+	glm::vec2 uvCoord;
+	glm::vec3 normal;
+
+	for(size_t i = 0; i < size + 1; i++) {
+		for(size_t k = 0; k < size + 1; k++) {
+			position = {i, 0, k};
+
+			uvCoord = {(float) (i % size) , (float) (k % size)};
+			normal = {0, 1, 0};
+			vertices.emplace_back(position, uvCoord, normal);
+		}
+	}
+
+	for(size_t i = 0; i < size * size; i++) {
+		indices.push_back((i + i / size));
+		indices.push_back((i + i / size) + 1);
+		indices.push_back((i + i / size) + (size + 1));
+
+		indices.push_back((i + i / size) + 1);
+		indices.push_back((i + i / size) + (size + 2));
+		indices.push_back((i + i / size) + (size + 1));
+	}
+
+	return new VertexBuffer(vertices, indices);
+}
+
 void Field::init() {
+	parent->addComponent((new RenderComponent(
+			parent->getScene()->getMesh("field", generateField(32)),
+			new Material(parent->getScene()->getVideoDriver()->getTexture("solis.png")))));
+
 	for (size_t y = 0; y < FIELD_SIZE; y++) {
 		for (size_t x = 0; x < FIELD_SIZE; x++) {
 			blocks.at(x).at(y) = new Block(BlockType::eEmpty);

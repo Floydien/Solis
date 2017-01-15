@@ -1,5 +1,6 @@
 #include "player.h"
 #include "scene.h"
+#include "rendercomponent.h"
 
 //TODO: Find more elegant solution for this
 static bool pressed[4];
@@ -7,6 +8,10 @@ const size_t Player::MAX_CARRY_AMOUNT = 10;
 
 void Player::init() {
 	prevPosition = *getTransform()->getPosition();
+
+	parent->addComponent((new RenderComponent(
+			parent->getScene()->getMesh("Person.obj"),
+			new Material(parent->getScene()->getVideoDriver()->getTexture("solis.png")))));
 }
 
 void Player::input(float, SolisDevice *device) {

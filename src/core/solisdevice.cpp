@@ -69,3 +69,10 @@ void SolisDevice::createDriver() {
         // videoDriver = new VulkanDriver(this);
     }
 }
+
+
+glm::vec2 SolisDevice::getCursorPosition() {
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    return {x,y};
+}

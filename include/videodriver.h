@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -31,8 +32,9 @@ public:
 	virtual void deleteBuffer(VBLink *) = 0;
 
 	virtual void addShaderFromFile(const std::string &) = 0;
+	virtual void bindShader(const std::string &) = 0;
 	virtual Shader *getActiveShader() const = 0;
-	virtual void deleteShader() = 0;
+	virtual void deleteShader(const std::string &) = 0;
 
 	virtual Texture *getTexture(const std::string &) = 0;
 	virtual void bindTexture(Texture *) const = 0;
@@ -40,9 +42,11 @@ public:
 	virtual void clearScreenBuffer() = 0;
 protected:
 	SolisDevice *device;
-	Shader *activeShader;
+	std::shared_ptr<Shader> activeShader;
+	//Shader *activeShader;
 
 	std::map<const VertexBuffer *, VBLink *> vertexBufferMap;
 	std::map<const std::string, Texture *> textureMap;
+	std::map<const std::string, std::shared_ptr<Shader>> activeShaders;
 
 };
