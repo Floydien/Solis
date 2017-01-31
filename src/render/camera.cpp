@@ -56,6 +56,16 @@ glm::mat4 Camera::getViewProjection() const
 
     return vp * view;
 }
+glm::mat4 Camera::getView() const {
+    return glm::lookAt(
+            pos,
+            dir + pos,
+            up);
+}
+
+glm::mat4 Camera::getProjection() const {
+    return projection;
+}
 
 bool Camera::hasChanged() const {
     if(changed) {

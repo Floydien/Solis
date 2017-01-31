@@ -3,7 +3,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-std::map<const std::string, VertexBuffer *> Mesh::vbufferMap;
+std::map<const std::string, std::shared_ptr<VertexBuffer>> Mesh::vbufferMap;
 
 Mesh::Mesh(const std::string &filename) :
 	name(filename) {
@@ -24,9 +24,6 @@ Mesh::Mesh(const std::string &filename) :
 
 	    aiMesh *mesh = scene->mMeshes[0];
 
-	    std::vector<glm::vec3> pos;
-	    std::vector<glm::vec2> uvs;
-	    std::vector<glm::vec3> nor;
 	    std::vector<Vertex> vertices;
 	    std::vector<unsigned int> indices;
 
@@ -44,9 +41,9 @@ Mesh::Mesh(const std::string &filename) :
 	        indices.push_back(face.mIndices[1]);
 	        indices.push_back(face.mIndices[2]);
 	    }
-	    buffer = new VertexBuffer(vertices, indices);
+	    buffer = std::make_shared<VertexBuffer>(vertices, indices);
 
-	    vbufferMap.insert(std::pair<std::string, VertexBuffer *>(filename, buffer));
+	    vbufferMap.insert(std::pair<std::string, std::shared_ptr<VertexBuffer>>(filename, buffer));
 	}
 }
 
@@ -57,8 +54,19 @@ Mesh::Mesh(const std::string &name, VertexBuffer *buffer)  :
 		this->buffer = it->second;
 		this->buffer->addReference();
 	} else {
-		this->buffer = buffer;
-		vbufferMap.insert(std::pair<std::string, VertexBuffer *>(name, buffer));
+		this->buffer = std::shared_ptr<VertexBuffer>(buffer);
+		vbufferMap.insert(std::pair<std::string, std::shared_ptr<VertexBuffer>>(name, this->buffer));
+	}
+}
+
+Mesh::Mesh(const std::string &name, std::shared_ptr<VertexBuffer> buffer)  :
+		name(name) {
+			
+	auto itRes = vbufferMap.insert(std::pair<std::string, std::shared_ptr<VertexBuffer>>(name, buffer));
+	if(itRes.second) {
+		this->buffer = std::move(buffer);
+	} else {
+		this->buffer = itRes.first->second;
 	}
 }
 
@@ -68,7 +76,6 @@ Mesh::~Mesh() {
     	if(it->second->removeReference()) {
     		//remove from map if all references are gone
     		vbufferMap.erase(it);
-        	delete buffer;
     	}
 	}
 }

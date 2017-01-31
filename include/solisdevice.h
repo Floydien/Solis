@@ -1,9 +1,12 @@
 #pragma once
-#include <stdexcept>
+#ifndef GLFW_INCLUDE_VULKAN
+	#define GLFW_INCLUDE_VULKAN
+#endif
 #include "videodriver.h"
-#include "input.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <stdexcept>
+#include "input.h"
 
 enum class VideoDriverType {
 	eOpenGL,

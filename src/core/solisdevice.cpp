@@ -66,7 +66,7 @@ void SolisDevice::createDriver() {
 	if(ACTIVE_VIDEO_DRIVER_TYPE == VideoDriverType::eOpenGL) {
 		videoDriver = new OpenGLDriver(this);
 	} else if (ACTIVE_VIDEO_DRIVER_TYPE == VideoDriverType::eVulkan) {
-        // videoDriver = new VulkanDriver(this);
+        videoDriver = new VulkanDriver(this);
     }
 }
 

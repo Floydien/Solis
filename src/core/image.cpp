@@ -36,7 +36,7 @@ Image::Image(const std::string &filename) :
         if(img) {
             std::vector<uint8_t> imgVec;
             
-        	for(size_t i = 0; i < width * height * 4; i++) {
+        	for(int32_t i = 0; i < width * height * 4; i++) {
         		imgVec.push_back(img[i]);
         	}
             

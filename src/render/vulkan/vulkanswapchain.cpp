@@ -1,119 +1,105 @@
+/* EDIT DIS */
+
 #include "vulkanswapchain.h"
 
+
+VulkanSwapchain::VulkanSwapchain(SolisDevice *solisDevice, 
+		std::shared_ptr<VulkanContext> context, 
+		std::shared_ptr<VulkanDevice>  vulkanDevice) :
+		context(context),
+		device(vulkanDevice) {
+
+	surface = std::shared_ptr<VkSurfaceKHR>(new VkSurfaceKHR);
+	glfwCreateWindowSurface(context->instance, solisDevice->getWindow(), nullptr, surface.get());
+
+	VkSurfaceCapabilitiesKHR capabilities;
+	context->vk.getPhysicalDeviceSurfaceCapabilitiesKHR(device->physicalDevice.device, *surface, &capabilities);
+
+	uint32_t formatCount;
+	context->vk.getPhysicalDeviceSurfaceFormatsKHR(device->physicalDevice.device, *surface, &formatCount, nullptr);
+	std::vector<VkSurfaceFormatKHR> formats(formatCount);
+	context->vk.getPhysicalDeviceSurfaceFormatsKHR(device->physicalDevice.device, *surface, &formatCount, formats.data());
+
+	imageFormat = formats[0].format;
+
+	uint32_t presentModeCount;
+	context->vk.getPhysicalDeviceSurfacePresentModesKHR(device->physicalDevice.device, *surface, &presentModeCount, nullptr);
+	std::vector<VkPresentModeKHR> presentModes(presentModeCount);
+	context->vk.getPhysicalDeviceSurfacePresentModesKHR(device->physicalDevice.device, *surface, &presentModeCount, presentModes.data());
+
+	uint32_t imageCount = capabilities.minImageCount + 1;
+    if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount) {
+        imageCount = capabilities.maxImageCount;
+    }
+
+    uint32_t familyIndex[] = {0, 2};
+
+    dimensions = {(uint32_t)solisDevice->getWidth(), (uint32_t)solisDevice->getHeight()};
+
+	VkSwapchainCreateInfoKHR sci = {
+		VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+		nullptr,
+		0,
+		*surface,
+		imageCount,
+		imageFormat,
+		VK_COLOR_SPACE_SRGB_NONLINEAR_KHR /* This is the only colorspace aviable */,
+		dimensions,
+		1,
+		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+		/*FOR MY CARD*/
+		VK_SHARING_MODE_CONCURRENT,
+		2,
+		familyIndex,
+		///////
+		capabilities.currentTransform,
+		VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+		presentModes[0],
+		true,
+		VK_NULL_HANDLE
+	};
+
+	uint32_t supported;
+	context->vk.getPhysicalDeviceSurfaceSupportKHR(context->physicalDevices[0].device, 0, *surface, &supported);
+	context->vk.getPhysicalDeviceSurfaceSupportKHR(context->physicalDevices[0].device, 1, *surface, &supported);
+	context->vk.getPhysicalDeviceSurfaceSupportKHR(context->physicalDevices[0].device, 2, *surface, &supported);
+
+	device->vk.createSwapchainKHR(device->device, &sci, nullptr, &swapchain);
+
+	/* GET SWAPCHAIN IMAGES */
+	uint32_t swapchainImageCount;
+	device->vk.getSwapchainImagesKHR(device->device, swapchain, &swapchainImageCount, nullptr);
+    images.resize(swapchainImageCount);
+    device->vk.getSwapchainImagesKHR(device->device, swapchain, &swapchainImageCount, images.data());
+
+    /* CREATE IMAGE VIEWS */
+    imageViews.resize(images.size());
+    for(size_t i = 0; i < imageViews.size(); i++) {
+    	VkImageViewCreateInfo ivci = {
+    		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+    		nullptr,
+    		0,
+    		images[i],
+    		VK_IMAGE_VIEW_TYPE_2D,
+    		imageFormat,
+    		{ VK_COMPONENT_SWIZZLE_IDENTITY, 
+    			VK_COMPONENT_SWIZZLE_IDENTITY, 
+    			VK_COMPONENT_SWIZZLE_IDENTITY, 
+    			VK_COMPONENT_SWIZZLE_IDENTITY },
+    		{ VK_IMAGE_ASPECT_COLOR_BIT,
+    			0, 1, 0, 1 }
+    	};
+
+    	device->vk.createImageView(device->device, &ivci, nullptr, &imageViews[i]);
+    }
+
+}
+
 VulkanSwapchain::~VulkanSwapchain() {
-}
-
-void VulkanSwapchain::init(SolisDevice *device, const VulkanContext &context) {
-	createSurface(device);
-	presentQueueIndex = context.findQueue(vk::QueueFlagBits::eGraphics, surface);
-	presentQueue = context.device.getQueue(presentQueueIndex, 0);
-	createSwapchain();
-}
-
-void VulkanSwapchain::destroy(const VulkanContext &context) {
-	for(size_t i = 0; i < images.size(); i++) {
-		context.device.destroyImageView(images[i].imageView);
+	for(auto &imageView : imageViews) {
+		device->vk.destroyImageView(device->device, imageView, nullptr);
 	}
 
-	context.device.destroySwapchainKHR(swapchain);
-	context.instance.destroySurfaceKHR(surface);
-}
-
-void VulkanSwapchain::present(uint32_t imageIndex, const vk::ArrayProxy<const vk::Semaphore> &waitSemaphores) {
-	vk::PresentInfoKHR presentInfo;
-	presentInfo.waitSemaphoreCount = waitSemaphores.size();
-	presentInfo.pWaitSemaphores = waitSemaphores.data();
-	presentInfo.swapchainCount = 1;
-	presentInfo.pSwapchains = &swapchain;
-	presentInfo.pImageIndices = &imageIndex;
-
-	presentQueue.presentKHR(presentInfo);
-}
-
-void VulkanSwapchain::createSurface(SolisDevice *device, const VulkanContext &context) {
-	if(glfwCreateWindowSurface(context.instance, device->getWindow(), nullptr, (VkSurfaceKHR *)&surface) != VK_SUCCESS)
-		throw std::runtime_error("failed to create window surface");
-
-	swapchainExtent = vk::Extent2D{(uint32_t)device->getWidth() / 2,(uint32_t) device->getHeight() / 2};
-}
-
-void VulkanSwapchain::createSwapchain(const VulkanContext &context) {
-	if(!context.physicalDevice.getSurfaceSupportKHR(presentQueueIndex, surface))
-		throw std::runtime_error("The device does not support the surface");
-
-	//choose surface Format
-	std::vector<vk::SurfaceFormatKHR> surfaceFormats = context.physicalDevice.getSurfaceFormatsKHR(surface);
-	auto formatCount = surfaceFormats.size();
-
-
-	if(formatCount == 1 && surfaceFormats[0].format == vk::Format::eUndefined) {
-		colorFormat = vk::Format::eB8G8R8A8Unorm;
-	} else {
-		colorFormat = surfaceFormats[0].format;
-	}
-	colorSpace = surfaceFormats[0].colorSpace;
-
-	vk::SurfaceCapabilitiesKHR surfaceCapabilities = context.physicalDevice.getSurfaceCapabilitiesKHR(surface);
-	std::vector<vk::PresentModeKHR> presentModes = context.physicalDevice.getSurfacePresentModesKHR(surface);
-	size_t presentModeCount = presentModes.size();
-
-	//choose Extent
-	if(surfaceCapabilities.currentExtent.width != UINT32_MAX) {
-		swapchainExtent = surfaceCapabilities.currentExtent;
-	}
-
-	//choose Present mode
-	vk::PresentModeKHR swapchainPresentMode = vk::PresentModeKHR::eFifo;
-	for(size_t i = 0; i < presentModeCount; i++) {
-		if(presentModes[i] == vk::PresentModeKHR::eMailbox) {
-			swapchainPresentMode = vk::PresentModeKHR::eMailbox;
-			break;
-		}
-		if(presentModes[i] == vk::PresentModeKHR::eImmediate) {
-			swapchainPresentMode = vk::PresentModeKHR::eImmediate;
-		}
-	}
-
-	uint32_t swapchainImageCount = surfaceCapabilities.minImageCount + 1;
-	if(surfaceCapabilities.maxImageCount > 0 && swapchainImageCount > surfaceCapabilities.maxImageCount) {
-		swapchainImageCount = surfaceCapabilities.maxImageCount;
-	}
-
-	//Creation of the Swapchain
-	vk::SwapchainCreateInfoKHR swapchainCreateInfo;
-	swapchainCreateInfo.surface = surface;
-	swapchainCreateInfo.minImageCount = swapchainImageCount;
-	swapchainCreateInfo.imageFormat = colorFormat;
-	swapchainCreateInfo.imageColorSpace = colorSpace;
-	swapchainCreateInfo.imageExtent = vk::Extent2D{ swapchainExtent.width, swapchainExtent.height };
-	swapchainCreateInfo.imageUsage = vk::ImageUsageFlagBits::eColorAttachment;
-	swapchainCreateInfo.preTransform = surfaceCapabilities.currentTransform;
-	swapchainCreateInfo.imageArrayLayers = 1;
-	swapchainCreateInfo.imageSharingMode = vk::SharingMode::eExclusive;
-	swapchainCreateInfo.queueFamilyIndexCount = 0;
-	swapchainCreateInfo.pQueueFamilyIndices = nullptr;
-	swapchainCreateInfo.presentMode = swapchainPresentMode;
-	swapchainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
-	swapchainCreateInfo.clipped = true;
-	swapchainCreateInfo.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
-
-	swapchain = context.device.createSwapchainKHR(swapchainCreateInfo);
-
-	//Create Swapchain Images
-	vk::ImageViewCreateInfo colorAttachmentView;
-	colorAttachmentView.format = colorFormat;
-	colorAttachmentView.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
-	colorAttachmentView.subresourceRange.levelCount = 1;
-	colorAttachmentView.subresourceRange.layerCount = 1;
-	colorAttachmentView.viewType = vk::ImageViewType::e2D;
-
-	auto swapchainImages = context.device.getSwapchainImagesKHR(swapchain);
-	size_t imageCount = swapchainImages.size();
-
-	images.resize(imageCount);
-	for(size_t i = 0; i < imageCount; i++) {
-		images[i].image = swapchainImages[i];
-		colorAttachmentView.image = swapchainImages[i];
-		images[i].imageView = context.device.createImageView(colorAttachmentView);
-	}
+	device->vk.destroySwapchainKHR(device->device, swapchain, nullptr);
+	context->vk.destroySurfaceKHR(context->instance, *surface, nullptr);
 }

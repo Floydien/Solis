@@ -27,7 +27,7 @@ OpenGLDriver::~OpenGLDriver() {
     }
 }
 
-OpenGLDriver::VBLink *OpenGLDriver::getBufferLink(const VertexBuffer *vb) const {
+OpenGLDriver::VBLink *OpenGLDriver::getBufferLink(std::shared_ptr<const VertexBuffer> vb) const { 
     if(!vb) {
         return nullptr;
     }
@@ -40,16 +40,16 @@ OpenGLDriver::VBLink *OpenGLDriver::getBufferLink(const VertexBuffer *vb) const 
     return nullptr;
 }
 
-OpenGLDriver::VBLink *OpenGLDriver::createBuffer(const VertexBuffer *vb) {
-	if(!vb) {
-		return nullptr;
-	}
-	auto it = vertexBufferMap.find(vb);
-	if(it != vertexBufferMap.end()) {
-		return it->second;
-	}
+OpenGLDriver::VBLink *OpenGLDriver::createBuffer(std::shared_ptr<const VertexBuffer> vbuffer) { 
+    if(!vbuffer) {
+        return nullptr;
+    }
+    auto it = vertexBufferMap.find(vbuffer);
+    if(it != vertexBufferMap.end()) {
+        return it->second;
+    }
 
-	VBLinkGL *vblink = new VBLinkGL(vb);
+    VBLinkGL *vblink = new VBLinkGL(vbuffer);
 
     glGenVertexArrays(1, &vblink->vao);
     glBindVertexArray(vblink->vao);
@@ -59,50 +59,29 @@ OpenGLDriver::VBLink *OpenGLDriver::createBuffer(const VertexBuffer *vb) {
 
     glBindBuffer(GL_ARRAY_BUFFER, vblink->vbo);
     glBufferData(GL_ARRAY_BUFFER, 
-        vb->getVertices().size() * sizeof(vb->getVertices()[0]), 
-        vb->getVertices().data(), GL_STATIC_DRAW);
+        vbuffer->getVertices().size() * sizeof(vbuffer->getVertices()[0]), 
+        vbuffer->getVertices().data(), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0); 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vb->getVertices()[0]), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vbuffer->getVertices()[0]), 0);
     glEnableVertexAttribArray(1); 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vb->getVertices()[0]), (GLvoid*) (sizeof(float)*3));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vbuffer->getVertices()[0]), (GLvoid*) (sizeof(float)*3));
     glEnableVertexAttribArray(2); 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vb->getVertices()[0]), (GLvoid*) (sizeof(float)*5));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vbuffer->getVertices()[0]), (GLvoid*) (sizeof(float)*5));
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vblink->ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
-        vb->getVertexIndices().size() * sizeof(vb->getVertexIndices()[0]),
-        vb->getVertexIndices().data(), GL_STATIC_DRAW);
+        vbuffer->getVertexIndices().size() * sizeof(vbuffer->getVertexIndices()[0]),
+        vbuffer->getVertexIndices().data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0);
 
-    vertexBufferMap.insert(std::pair<const VertexBuffer *, VBLink *>(vb, vblink));
+    vertexBufferMap.insert(std::pair<std::shared_ptr<const VertexBuffer>, VBLink *>(vbuffer, vblink));
 
-	return vblink;
+    return vblink;
 }
 
-void OpenGLDriver::deleteBuffer(OpenGLDriver::VBLink *bufferLink) {
-	auto it = vertexBufferMap.find(bufferLink->vertexBuffer);
-	if(it != vertexBufferMap.end()) {
-    	glDeleteVertexArrays(1, &static_cast<VBLinkGL *>(it->second)->vao);
-    	glDeleteBuffers(1, &static_cast<VBLinkGL *>(it->second)->vbo);
-    	glDeleteBuffers(1, &static_cast<VBLinkGL *>(it->second)->ibo);
-
-        delete it->second;
-    	vertexBufferMap.erase(it);
-	}
-}
-
-void OpenGLDriver::drawBufferLink(OpenGLDriver::VBLink *bufferLink) const {
-	if(!bufferLink) {
-		return;
-	}
-
-    glBindVertexArray(static_cast<VBLinkGL *>(bufferLink)->vao);
-    glDrawElements(GL_TRIANGLES, static_cast<VBLinkGL *>(bufferLink)->vertexBuffer->getVertexIndices().size(), GL_UNSIGNED_INT, 0);
-}
-
-void OpenGLDriver::drawVertexBuffer(const VertexBuffer *vbuffer) const {
+void OpenGLDriver::drawVertexBuffer(std::shared_ptr<const VertexBuffer> vbuffer) const {
     if(!vbuffer) {
         return;
     }
@@ -112,8 +91,30 @@ void OpenGLDriver::drawVertexBuffer(const VertexBuffer *vbuffer) const {
     if(bufferLink) {
         drawBufferLink(bufferLink);
     }
+
 }
 
+void OpenGLDriver::drawBufferLink(OpenGLDriver::VBLink *bufferLink) const {
+    if(!bufferLink) {
+        return;
+    }
+
+    glBindVertexArray(static_cast<VBLinkGL *>(bufferLink)->vao);
+    glDrawElements(GL_TRIANGLES, static_cast<VBLinkGL *>(bufferLink)->vertexBuffer->getVertexIndices().size(), GL_UNSIGNED_INT, 0);
+}
+
+void OpenGLDriver::deleteBuffer(OpenGLDriver::VBLink *bufferLink) {
+ auto it = vertexBufferMap.find(bufferLink->vertexBuffer);
+    if(it != vertexBufferMap.end()) {
+        auto bufferLinkGL = static_cast<VBLinkGL *>(it->second);
+        glDeleteVertexArrays(1, &bufferLinkGL->vao);
+        glDeleteBuffers(1, &bufferLinkGL->vbo);
+        glDeleteBuffers(1, &bufferLinkGL->ibo);
+
+        delete it->second;
+        vertexBufferMap.erase(it);
+    }
+}
 
 void OpenGLDriver::addShaderFromFile(const std::string &name) {
     auto it = activeShaders.find(name);

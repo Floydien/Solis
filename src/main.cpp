@@ -2,10 +2,11 @@
 #include "game/game.h"
 
 int main() {
-	printf("Hey\n");
-	{ 
-		Game g;
-		g.init();
-		g.run();
-	}
+	// { 
+	// 	Game g;
+	// 	g.init();
+	// 	g.run();
+	// }
+
+	SolisDevice device(VideoDriverType::eVulkan, 1280, 720);
 }

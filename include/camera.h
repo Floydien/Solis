@@ -24,6 +24,8 @@ public:
     void input(float, SolisDevice *);
 
     glm::mat4 getViewProjection() const;
+    glm::mat4 getView() const;
+    glm::mat4 getProjection() const;
     inline const glm::vec3 &getPosition() const { return pos; };
 
     inline void setSpeed(float value) { speed = value; };

@@ -1,4 +1,8 @@
 #pragma once
+#ifndef GLFW_INCLUDE_VULKAN
+	#define GLFW_INCLUDE_VULKAN
+#endif
+#include <glm/glm.hpp>
 #include <string>
 #include <vector>
 

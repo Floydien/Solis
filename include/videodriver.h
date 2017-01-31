@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#include <glm/glm.hpp>
 #include "vertexbuffer.h"
 #include "texture.h"
 #include "shader.h"
@@ -15,9 +14,9 @@ class VideoDriver {
 protected:
 	class VBLink {
 	public:
-		VBLink(const VertexBuffer *buffer) : vertexBuffer(buffer) {};
+		VBLink(std::shared_ptr<const VertexBuffer> buffer) : vertexBuffer(buffer) {};
 
-		const VertexBuffer *vertexBuffer;
+		std::shared_ptr<const VertexBuffer> vertexBuffer;
 	};
 public:
 	VideoDriver(SolisDevice *device) : 
@@ -25,9 +24,9 @@ public:
 		activeShader(nullptr) {};
 	virtual ~VideoDriver() = default;
 
-	virtual VBLink *getBufferLink(const VertexBuffer *) const = 0;
-	virtual VBLink *createBuffer(const VertexBuffer *) = 0;
-	virtual void drawVertexBuffer(const VertexBuffer *) const = 0;
+	virtual VBLink *getBufferLink(std::shared_ptr<const VertexBuffer>) const = 0;
+	virtual VBLink *createBuffer(std::shared_ptr<const VertexBuffer>) = 0;
+	virtual void drawVertexBuffer(std::shared_ptr<const VertexBuffer>) const = 0;
 	virtual void drawBufferLink(VBLink *) const = 0;
 	virtual void deleteBuffer(VBLink *) = 0;
 
@@ -43,9 +42,8 @@ public:
 protected:
 	SolisDevice *device;
 	std::shared_ptr<Shader> activeShader;
-	//Shader *activeShader;
 
-	std::map<const VertexBuffer *, VBLink *> vertexBufferMap;
+	std::map<std::shared_ptr<const VertexBuffer>, VBLink *> vertexBufferMap;
 	std::map<const std::string, Texture *> textureMap;
 	std::map<const std::string, std::shared_ptr<Shader>> activeShaders;
 

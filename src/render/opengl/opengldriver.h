@@ -8,20 +8,34 @@
 
 class OpenGLDriver : public VideoDriver {
 public:
-	class VBLinkGL : public VBLink{
+	// class VBLinkGL : public VBLink{
+	// public:
+	// 	VBLinkGL(const VertexBuffer *buffer) : VBLink(buffer) {};
+
+	// 	uint32_t vao;
+	// 	uint32_t vbo;
+	// 	uint32_t ibo;
+	// };
+	class VBLinkGL : public VBLink {
 	public:
-		VBLinkGL(const VertexBuffer *buffer) : VBLink(buffer) {};
+		VBLinkGL(std::shared_ptr<const VertexBuffer> buffer) : VBLink(buffer) {};
 
 		uint32_t vao;
 		uint32_t vbo;
 		uint32_t ibo;
 	};
+	
 	OpenGLDriver(SolisDevice *);
 	~OpenGLDriver();
 
-	VBLink *getBufferLink(const VertexBuffer *) const;
-	VBLink *createBuffer(const VertexBuffer *);
-	void drawVertexBuffer(const VertexBuffer *) const;
+	// VBLink *getBufferLink(const VertexBuffer *) const;
+	// VBLink *createBuffer(const VertexBuffer *);
+	// void drawVertexBuffer(const VertexBuffer *) const;
+	// void drawBufferLink(VBLink *) const;
+	// void deleteBuffer(VBLink *);
+	VBLink *getBufferLink(std::shared_ptr<const VertexBuffer>) const;
+	VBLink *createBuffer(std::shared_ptr<const VertexBuffer>);
+	void drawVertexBuffer(std::shared_ptr<const VertexBuffer>) const;
 	void drawBufferLink(VBLink *) const;
 	void deleteBuffer(VBLink *);
 

@@ -11,7 +11,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-	//delete device;
+	delete device;
 }
 
 void Game::init() {
@@ -105,4 +105,5 @@ void Game::run() {
 		}
 		end = start;
 	}
+	
 }

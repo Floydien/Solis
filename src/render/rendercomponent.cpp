@@ -6,7 +6,7 @@ RenderComponent::~RenderComponent() {
 			then remove it from the gpu */
 	if (mesh->getVertexBuffer()->getReferenceCount() == 1) {
 
-		auto link =parent->getScene()->getVideoDriver()->getBufferLink(mesh->getVertexBuffer());
+		auto link = parent->getScene()->getVideoDriver()->getBufferLink(mesh->getVertexBuffer());
 		if (link != nullptr) {
 			parent->getScene()->getVideoDriver()->deleteBuffer(link);
 		}
@@ -16,7 +16,7 @@ RenderComponent::~RenderComponent() {
 }
 
 void RenderComponent::render(const VideoDriver *driver) const {
-		driver->getActiveShader()->updateUniformMatrix4fv("transform.model", getTransform().getTransformation());
-		driver->bindTexture(material->getTexture());
-		driver->drawVertexBuffer(mesh->getVertexBuffer());
+	driver->getActiveShader()->updateUniformMatrix4fv("transform.model", getTransform().getTransformation());
+	driver->bindTexture(material->getTexture());
+	driver->drawVertexBuffer(mesh->getVertexBuffer());
 }
