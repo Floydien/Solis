@@ -3,10 +3,9 @@
 
 class AABB {
 public:
-	AABB(const glm::vec3 &pos = glm::vec3(), const glm::vec3 &halfextent = glm::vec3(1.0f)) : 
-		pos(pos), halfextent(halfextent) {};
+	AABB(const glm::vec3 &position = glm::vec3(), const glm::vec3 &halfExtent = glm::vec3()) : 
+		position(position), halfExtent(halfExtent) {};
 
-	glm::vec3 pos;
-	glm::vec3 halfextent;
-private:
+	glm::vec3 position;
+	glm::vec3 halfExtent;
 };
