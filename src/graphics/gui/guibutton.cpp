@@ -6,7 +6,7 @@ void GUIButton::init(Scene *scene) {
 	image->init(scene);
 }
 
-void GUIButton::update(SolisDevice *device) {
+void GUIButton::update(std::shared_ptr<SolisDevice> device) {
 	if( device->mousePressed(GLFW_MOUSE_BUTTON_LEFT) ) {
 		auto pos = device->getCursorPosition();
 		if (callback && transform.contains(pos)) {

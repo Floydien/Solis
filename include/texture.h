@@ -4,7 +4,8 @@
 #include "image.h"
 
 
-class Texture {
+class Texture 
+{
 public:
 	Texture(const std::string &) {};
 	virtual ~Texture() = default;

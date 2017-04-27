@@ -6,10 +6,11 @@
 #include "videodriver.h"
 #include "transform.h"
 #include "nodecomponent.h"
-//class NodeComponent;
+
 class Scene;
 
-class Node {
+class Node 
+{
 public:
 	Node(const Transform &transform = Transform(), const std::string &name = "") :
 		scene(nullptr),

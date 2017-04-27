@@ -10,7 +10,7 @@ public:
 		transform(rect) {};
 
 	void init(Scene *);
-	void update(SolisDevice *);
+	void update(std::shared_ptr<SolisDevice>);
 	void draw(const VideoDriver *) const;
 
 	inline void setCallback(std::function<void()> cb) { callback = cb; };

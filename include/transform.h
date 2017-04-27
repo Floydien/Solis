@@ -5,10 +5,9 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
 
-/** 
- *	Class to represent the transformation of an object in 3D-space
- */
-class Transform {
+///Class to represent the transformation of an object in 3D-space
+class Transform 
+{
 public:
 	Transform(const glm::vec3& position = glm::vec3(0,0,0),
 			const glm::quat& rotation = glm::quat(),
@@ -21,10 +20,15 @@ public:
 				{};
 	~Transform() = default;
 
+	/// Rotate by the given quaternion
 	void rotate(const glm::quat& rotation);
+	/// Rotate around an axis by the given angle
 	void rotate(const glm::vec3& axis, float angle);
+	/// Move in direction of the forward vector
 	void moveForward(float amount);
+	/// Move right 
 	void moveRight(float amount);
+	/// Move in the given direction
 	void move(const glm::vec3& direction, float amount);
 
 	glm::mat4 getTransformation() const;
@@ -48,6 +52,12 @@ public:
 	inline void setScale(float scale) 					{ this->scale = glm::vec3(scale); }
 	inline void setParent(Transform* parent) 			{ this->parent = parent; }
 
+	inline bool operator==(const Transform& other) const {
+		return position == other.position && 
+				rotation == other.rotation && 
+				scale == other.scale;
+	}
+	inline bool operator!=(const Transform& other) const { return !(*this == other); }
 private:
 	const glm::mat4& getParentMatrix() const;
 

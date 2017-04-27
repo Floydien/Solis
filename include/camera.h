@@ -5,7 +5,11 @@
 
 #include "solisdevice.h"
 
-class Camera {
+//TODO: Make use of transform.h
+
+/// Represent a camera in 3d space
+class Camera 
+{
 public:
     Camera(float fov, float aspectRatio, float nearZ, float farZ, const glm::vec3 pos = glm::vec3(), float speed = 1.0f) :
         Camera(glm::perspective(glm::radians(fov),aspectRatio, nearZ, farZ), pos, speed) {};
@@ -19,7 +23,8 @@ public:
         up(glm::vec3(0,1,0)),
         pitch(0),
         yaw(90),
-        changed(true){}
+        changed(true),
+        mouseCatched(false){}
 
     void input(float, SolisDevice *);
 
@@ -28,8 +33,8 @@ public:
     glm::mat4 getProjection() const;
     inline const glm::vec3 &getPosition() const { return pos; };
 
-    inline void setSpeed(float value) { speed = value; };
-    inline void setRotationSpeed(float value) { rotationSpeed = value; };
+    inline void setSpeed(float value)           { speed = value; };
+    inline void setRotationSpeed(float value)   { rotationSpeed = value; };
 
     //checks if the camera has changed since the last call
     bool hasChanged() const;
@@ -49,4 +54,6 @@ private:
     glm::vec3 oldDir;
 
     mutable bool changed;
+    // Maybe: Move this to somewhere else
+    bool mouseCatched;
 };

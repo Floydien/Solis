@@ -2,8 +2,8 @@
 
 Material::Material(Texture *texture, const glm::vec4 &color, float intensity, float specularity) :
 		color(color),
-		mainTexture(texture) {
-
+		mainTexture(texture) 
+{
 	floatValues.insert(std::pair<std::string, float>("intensity", intensity));
 	floatValues.insert(std::pair<std::string, float>("specularity", specularity));
 }

@@ -4,7 +4,8 @@
 
 class Node;
 
-class NodeComponent {
+class NodeComponent 
+{
 public:
 
 	virtual ~NodeComponent() = default;

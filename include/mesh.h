@@ -4,10 +4,13 @@
 #include <memory>
 #include "vertexbuffer.h"
 
-class Mesh {
+class Mesh 
+{
 public:
+	///Load the mesh from the specified path
 	Mesh(const std::string &);
-	Mesh(const std::string &, VertexBuffer *);
+	/// Create a mesh from an already created VertexBuffer
+	// Mesh(const std::string &, VertexBuffer *);
 	/** 
 	 * If a VertexBuffer with the same name is already loaded, the mesh will use the already loaded buffer,
 	 * else it uses the one passed by parameter

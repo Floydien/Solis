@@ -6,7 +6,8 @@
 #include <string>
 #include <vector>
 
-class Shader {
+class Shader 
+{
 public:
     Shader() = default;
     virtual ~Shader() = default;

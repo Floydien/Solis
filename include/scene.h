@@ -6,7 +6,8 @@
 #include <vector>
 #include "node.h"
 
-class Scene {
+class Scene 
+{
 public:
 	Scene(SolisDevice *device) : 
 		device(device), 
@@ -30,7 +31,8 @@ public:
 	void addCamera(const glm::vec3 & = glm::vec3());
 
 	Mesh *getMesh(const std::string &);
-	Mesh *getMesh(const std::string &, VertexBuffer *);
+	// Mesh *getMesh(const std::string &, VertexBuffer *);
+	Mesh *getMesh(const std::string &, std::shared_ptr<VertexBuffer>);
 
 private:
 	SolisDevice *device;

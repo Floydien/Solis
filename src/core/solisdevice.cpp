@@ -1,6 +1,6 @@
 #include "solisdevice.h"
-#include "../render/opengl/opengldriver.h"
-#include "../render/vulkan/vulkandriver.h"
+#include "../graphics/opengl/opengldriver.h"
+#include "../graphics/vulkan/vulkandriver.h"
 #include "scene.h"
 #include "input.h"
 

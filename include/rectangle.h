@@ -1,7 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 
-class Rectangle {
+class Rectangle 
+{
 public:
 	Rectangle(const glm::vec2 &center = glm::vec2(), const glm::vec2 &extent = glm::vec2()) :
 		center(std::move(center)),

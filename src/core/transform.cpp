@@ -38,7 +38,7 @@ void Transform::rotate(const glm::vec3& axis, float angle) {
 }
 
 void Transform::moveForward(float amount) {
-	position += rotation * glm::vec3(0,0,-1) * amount;
+	position += rotation * glm::vec3(0,0,1) * amount;
 }
 
 void Transform::moveRight(float amount) {
@@ -51,6 +51,10 @@ glm::vec3 Transform::getRight() const {
 
 glm::vec3 Transform::getForward() const {
 	return rotation * glm::vec3(0,0,1);
+}
+
+glm::vec3 Transform::getUp() const {
+	return rotation * glm::vec3(0,1,0);
 }
 
 void Transform::move(const glm::vec3& direction, float amount) {

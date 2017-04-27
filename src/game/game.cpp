@@ -11,7 +11,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-	delete device;
+	// delete device;
 }
 
 void Game::init() {
@@ -31,13 +31,13 @@ void Game::init() {
 	//	//set the blocks to the building
 	//}
 
-	device = new SolisDevice(VideoDriverType::eOpenGL, 1280, 720);
+	device = std::make_shared<SolisDevice>(VideoDriverType::eOpenGL, 1280, 720);
+	// device = new SolisDevice(VideoDriverType::eOpenGL, 1280, 720);
 	driver = device->getVideoDriver();
 	scene = device->getScene();
 
 	field = new Field();
 	
-
 	scene->addToScene((new Node(Transform(glm::vec3(-0.5,0,-0.5)), "Field"))
 		->addComponent(field));
 
@@ -76,43 +76,7 @@ void Game::run() {
 	auto end = start;
 	std::chrono::duration<float> diff;
 	
-	AABB millBox(glm::vec3(0,0,2), glm::vec3(1, 0.5f, 0.5f));
-
-	RayCast test1(glm::vec3(0.06f, 0, 0.1f), glm::normalize(glm::vec3(0.5f, 0, 0.865f)));
-	RayCast test2(glm::vec3(-0.06f, 0, 0.1f), glm::normalize(glm::vec3(-0.5f, 0, 0.865f)));
-
-	if(test1.intersects(millBox)) {
-		std::cout << "hey1" << std::endl;
-	}
-	if(test2.intersects(millBox)) {
-		std::cout << "hey2" << std::endl;
-	}
-
-	std::vector<Vertex> vertices = {
-		Vertex(millBox.position + glm::vec3( millBox.halfExtent.x,  millBox.halfExtent.y,  millBox.halfExtent.z)),
-		Vertex(millBox.position + glm::vec3( millBox.halfExtent.x,  millBox.halfExtent.y, -millBox.halfExtent.z)),
-		Vertex(millBox.position + glm::vec3( millBox.halfExtent.x, -millBox.halfExtent.y,  millBox.halfExtent.z)),
-		Vertex(millBox.position + glm::vec3( millBox.halfExtent.x, -millBox.halfExtent.y, -millBox.halfExtent.z)),
-		Vertex(millBox.position + glm::vec3(-millBox.halfExtent.x,  millBox.halfExtent.y,  millBox.halfExtent.z)),
-		Vertex(millBox.position + glm::vec3(-millBox.halfExtent.x,  millBox.halfExtent.y, -millBox.halfExtent.z)),
-		Vertex(millBox.position + glm::vec3(-millBox.halfExtent.x, -millBox.halfExtent.y,  millBox.halfExtent.z)),
-		Vertex(millBox.position + glm::vec3(-millBox.halfExtent.x, -millBox.halfExtent.y, -millBox.halfExtent.z)),
-	};
-	std::vector<uint32_t> indices = {
- 		1, 3, 0,
- 		7, 5, 4,
- 		4, 1, 0,
- 		5, 2, 1,
- 		6, 3, 2,
- 		0, 7, 4,
- 		1, 2, 3,
- 		7, 6, 5,
- 		4, 5, 1,
- 		5, 6, 2,
- 		6, 7, 3,
- 		0, 3, 7,
-	};
-	scene->addToScene((new Node())->addComponent(new RenderComponent(scene->getMesh("physicsBox", new VertexBuffer(vertices, indices)), new Material(new Texture("solis.png")))));
+	AABB millBox;
 
 
 	GUIButton button("random image", Rectangle({300, 250}, {500, 400}));
@@ -121,7 +85,7 @@ void Game::run() {
 	button.init(scene);
 	button.setCallback([this, &millBox](){ 
 		field->build(BuildingType::eSawmill,5,1	); 
-		millBox.position = glm::vec3(5.5,0.5,0.5);
+		millBox.position = glm::vec3(5.5,0.5,1.0);
 		millBox.halfExtent = glm::vec3(1, 0.5f, 0.5f);
 	});
 
@@ -160,11 +124,9 @@ void Game::run() {
 			glm::mat4 inverseProjection = glm::inverse(proj);			
 			auto view = scene->getActiveCamera()->getView();
 			glm::mat4 inverseView = glm::inverse(view);
-			auto m = glm::inverse(proj * view);
 
 			glm::vec4 rayStart(posX, posY, -1.0, 1.0);
 			glm::vec4 rayEnd(posX, posY, 0.0, 1.0);
-
 
 			rayStart = inverseProjection * rayStart;
 			glm::vec4 rayPos = (rayStart / rayStart.w);
@@ -179,8 +141,6 @@ void Game::run() {
 			}
 
 		}
-
-
 
 		if(diff.count() < time_per_frame) {
 			std::this_thread::sleep_for(std::chrono::microseconds((int)((time_per_frame - diff.count()) * 1000000)));

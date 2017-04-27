@@ -5,7 +5,8 @@
 #include "mesh.h"
 #include "scene.h"
 
-class RenderComponent : public NodeComponent {
+class RenderComponent : public NodeComponent 
+{
 public:
 	RenderComponent(Mesh *mesh, Material *material) : 
 		mesh(mesh),

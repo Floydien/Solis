@@ -2,7 +2,9 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-struct Vertex {
+/// Stores data to represent a Vertex in 3d space
+struct Vertex 
+{
 	Vertex() {};
 	Vertex(const glm::vec3 &pos = glm::vec3(), const glm::vec2 &uv = glm::vec2(), const glm::vec3 &normal = glm::vec3()) :
 		position(pos), uvCoord(uv), normal(normal) {};

@@ -1,7 +1,7 @@
 #include "field.h"
 #include "rendercomponent.h"
 
-VertexBuffer *generateField(uint32_t size) {
+std::shared_ptr<VertexBuffer> generateField(uint32_t size) {
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
@@ -29,7 +29,7 @@ VertexBuffer *generateField(uint32_t size) {
 		indices.push_back((i + i / size) + (size + 1));
 	}
 
-	return new VertexBuffer(vertices, indices);
+	return std::make_shared<VertexBuffer>(vertices, indices);
 }
 
 void Field::init() {

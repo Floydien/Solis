@@ -8,14 +8,16 @@
 #include <stdexcept>
 #include "input.h"
 
-enum class VideoDriverType {
+enum class VideoDriverType 
+{
 	eOpenGL,
 	eVulkan
 };
 
 class Scene;
 
-class SolisDevice {
+class SolisDevice 
+{
 public:
 	SolisDevice(VideoDriverType, uint32_t, uint32_t);
 	~SolisDevice();

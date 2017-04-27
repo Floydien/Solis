@@ -17,7 +17,8 @@ void GUIImage::init(Scene *scene) {
 	indices.emplace_back(3);
 	indices.emplace_back(0);
 
-	VertexBuffer *buffer = new VertexBuffer(vertices, indices);
+	// VertexBuffer *buffer = new VertexBuffer(vertices, indices);
+	auto buffer = std::make_shared<VertexBuffer>(vertices, indices);
 
 	quad = std::shared_ptr<Mesh>(scene->getMesh(name, buffer));
 }

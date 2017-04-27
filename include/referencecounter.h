@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 
-class ReferenceCounter{
+class ReferenceCounter
+{
 public:
 	ReferenceCounter():
 		refCount(1) {};

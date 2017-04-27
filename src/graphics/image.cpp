@@ -12,13 +12,17 @@
 std::map<const std::string, std::shared_ptr<Image::ImageData>> Image::imageDataMap;
 
 Image::Image(const std::string &filename) :
-    name(std::move(filename)) {
-
+        name(std::move(filename)) 
+{
+    // Check if the image was already loaded into the memory
     auto it = imageDataMap.find(name);
-    if(it != imageDataMap.end()) {
+    if(it != imageDataMap.end()) 
+    {
         imageData = it->second;
         imageData->addReference();
-    } else {
+    } 
+    else 
+    {
 
         int32_t width = 0;
         int32_t height = 0;
@@ -33,12 +37,12 @@ Image::Image(const std::string &filename) :
                             &channels, 4);
         #endif
 
-        if(img) {
+        if(img) 
+        {
             std::vector<uint8_t> imgVec;
             
-        	for(int32_t i = 0; i < width * height * 4; i++) {
+        	for(int32_t i = 0; i < width * height * 4; i++) 
         		imgVec.push_back(img[i]);
-        	}
             
             #ifdef __linux__
                 SOIL_free_image_data(img);
@@ -54,10 +58,10 @@ Image::Image(const std::string &filename) :
 
 Image::~Image() {
     auto it = imageDataMap.find(name);
-    if (it != imageDataMap.end()) {
-        if(it->second->removeReference()) {
-            //remove from map if all references are gone
+    if (it != imageDataMap.end()) 
+    {
+        //remove from map if all references are gone
+        if(it->second->removeReference()) 
             imageDataMap.erase(it);
-        }
     }
 }

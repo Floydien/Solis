@@ -6,7 +6,8 @@
 #include <memory>
 #include "referencecounter.h"
 
-class Image : public ReferenceCounter {
+class Image 
+{
 public:
 	Image(const std::string &);
 	~Image();

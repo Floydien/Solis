@@ -40,7 +40,14 @@ Mesh *Scene::getMesh(const std::string &filename) {
 	return nullptr;
 }
 
-Mesh *Scene::getMesh(const std::string &name, VertexBuffer *buffer) {
+// Mesh *Scene::getMesh(const std::string &name, VertexBuffer *buffer) {
+// 	meshcount++;
+// 	Mesh *mesh = new Mesh(name, buffer);
+// 	driver->createBuffer(mesh->getVertexBuffer());
+// 	return mesh;
+// }
+
+Mesh *Scene::getMesh(const std::string &name, std::shared_ptr<VertexBuffer> buffer) {
 	meshcount++;
 	Mesh *mesh = new Mesh(name, buffer);
 	driver->createBuffer(mesh->getVertexBuffer());

@@ -4,7 +4,8 @@
 #include <string>
 #include <map>
 
-class Material {
+class Material 
+{
 public:
 	Material(Texture *, const glm::vec4 &color = glm::vec4(1.0), float intensity = 1.0f, float specularity = 32.0f);
 

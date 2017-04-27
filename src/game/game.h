@@ -15,7 +15,8 @@ public:
 private:
 	Field *field;
 
-	SolisDevice *device;
+	std::shared_ptr<SolisDevice> device;
+	// SolisDevice *device;
 	VideoDriver *driver;
 	Scene *scene;
 };
